@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">МПТ Информатор</string>
+    <string name="additional_lesson">Дополнительное занятие</string>
+    <string name="lesson_number_format">%d.</string>
+    <string name="numerator_label">Числитель</string>
+    <string name="denominator_label">Знаменатель</string>
+    <string name="sunday">Воскресенье</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="schedule">Расписание</string>
+    <string name="changes">Замены</string>
+    <string name="empty_schedule">Расписания нет!</string>
+    <string name="empty_changes">Замен нет!</string>
+    <string name="unexpected_error">Неизвестная ошибка!</string>
+    <string name="date_format">dd.MM.yyyy</string>
+    <string name="department">Отделение</string>
+    <string name="group">Группа</string>
+    <string name="exams_schedule">Расписание экзаменов</string>
+    <string name="order_certificate">Заказать справку</string>
+    <string name="extra_links">Полезные ссылки</string>
+    <string name="github">Исходный код</string>
+    <string name="author">Автор</string>
+    <string name="departments_site">Сайты отделений</string>
+</resources>
