@@ -39,6 +39,9 @@ class GroupInfoViewModel @Inject constructor(
                 department = departmentsList.firstOrNull { it.id == scheduleSettings.first }
                 group = department?.groups?.firstOrNull { it.id == scheduleSettings.second }
             }
+            if (departmentsList.isEmpty()) {
+                return@launch
+            }
             if (department == null) {
                 department = departmentsList.first()
             }

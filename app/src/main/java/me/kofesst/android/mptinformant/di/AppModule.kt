@@ -11,6 +11,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import javax.inject.Singleton
 import me.kofesst.android.mptinformant.BuildConfig
 import me.kofesst.android.mptinformant.data.remote.InformantApiService
@@ -18,11 +19,18 @@ import me.kofesst.android.mptinformant.data.repositories.ChangesRepositoryImpl
 import me.kofesst.android.mptinformant.data.repositories.DepartmentsRepositoryImpl
 import me.kofesst.android.mptinformant.data.repositories.PreferencesRepositoryImpl
 import me.kofesst.android.mptinformant.data.repositories.ScheduleRepositoryImpl
+import me.kofesst.android.mptinformant.presentation.utils.OfflineInterceptor
+import me.kofesst.android.mptinformant.presentation.utils.OnlineInterceptor
+import me.kofesst.android.mptinformant.presentation.utils.buildOfflineInterceptor
+import me.kofesst.android.mptinformant.presentation.utils.buildOnlineInterceptor
 import me.kofesst.android.mptinformer.domain.repositories.ChangesRepository
 import me.kofesst.android.mptinformer.domain.repositories.DepartmentsRepository
 import me.kofesst.android.mptinformer.domain.repositories.PreferencesRepository
 import me.kofesst.android.mptinformer.domain.repositories.ScheduleRepository
 import me.kofesst.android.mptinformer.domain.usecases.UseCases
+import okhttp3.Cache
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -31,9 +39,44 @@ import retrofit2.converter.gson.GsonConverterFactory
 object AppModule {
     @Provides
     @Singleton
-    fun provideInformantApiService(): InformantApiService {
+    fun provideCache(@ApplicationContext context: Context): Cache {
+        val cacheDirectory = File(context.cacheDir, "schedule_responses")
+        val cacheSize: Long = 20 * 1024 * 1024 // 20 MB
+        return Cache(cacheDirectory, cacheSize)
+    }
+
+    @Provides
+    @Singleton
+    @OnlineInterceptor
+    fun provideOnlineInterceptor(@ApplicationContext context: Context) =
+        buildOnlineInterceptor(context)
+
+    @Provides
+    @Singleton
+    @OfflineInterceptor
+    fun provideOfflineInterceptor(@ApplicationContext context: Context) =
+        buildOfflineInterceptor(context)
+
+    @Provides
+    @Singleton
+    fun provideApiServiceClient(
+        @OnlineInterceptor onlineInterceptor: Interceptor,
+        @OfflineInterceptor offlineInterceptor: Interceptor,
+        cache: Cache,
+    ): OkHttpClient {
+        return OkHttpClient().newBuilder()
+            .addInterceptor(offlineInterceptor)
+            .addNetworkInterceptor(onlineInterceptor)
+            .cache(cache)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideInformantApiService(apiServiceClient: OkHttpClient): InformantApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
+            .client(apiServiceClient)
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
             .create(InformantApiService::class.java)
