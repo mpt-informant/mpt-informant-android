@@ -25,4 +25,6 @@
     <string name="github">Исходный код</string>
     <string name="author">Автор</string>
     <string name="departments_site">Сайты отделений</string>
+    <string name="schedule_widget_desc">Расписание последней выбранной группы</string>
+    <string name="schedule_widget_updates_soon">Виджет скоро обновится</string>
 </resources>
