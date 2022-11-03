@@ -23,6 +23,7 @@ import me.kofesst.android.mptinformant.widget.ScheduleWidget
 import me.kofesst.android.mptinformer.domain.models.Group
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
 import me.kofesst.android.mptinformer.domain.usecases.UseCases
 import java.util.*
 
@@ -48,14 +49,22 @@ class ScheduleWorkerTask @AssistedInject constructor(
                 polymorphic(GroupScheduleDay::class) {
                     subclass(GroupScheduleDay::class, GroupScheduleDay.serializer())
                 }
+                polymorphic(WidgetSettings::class) {
+                    subclass(WidgetSettings::class, WidgetSettings.serializer())
+                }
             }
         }
     }
 
     override suspend fun doWork(): Result {
-        val settings = useCases.restoreScheduleSettings()
+        val scheduleSettings = useCases.restoreScheduleSettings()
+        val widgetSettings = useCases.restoreWidgetSettings()
         return try {
-            updateWidget(settings, context)
+            updateWidget(
+                context = context,
+                scheduleSettings = scheduleSettings,
+                widgetSettings = widgetSettings
+            )
             Result.success()
         } catch (e: Exception) {
             Log.e("ScheduleWorker", e.stackTraceToString())
@@ -63,7 +72,11 @@ class ScheduleWorkerTask @AssistedInject constructor(
         }
     }
 
-    private suspend fun updateWidget(scheduleSettings: Pair<String, String>?, context: Context) {
+    private suspend fun updateWidget(
+        context: Context,
+        scheduleSettings: Pair<String, String>?,
+        widgetSettings: WidgetSettings,
+    ) {
         val groupId = scheduleSettings?.second
             ?: useCases.getDepartments().first().groups.first().id
         val schedule = useCases.getGroupSchedule(
@@ -74,6 +87,7 @@ class ScheduleWorkerTask @AssistedInject constructor(
             scheduleDay.dayOfWeek == currentDayOfWeek
         } ?: schedule.days.first()
         val scheduleJson = json.encodeToString(dayToDisplay)
+        val settingsJson = json.encodeToString(widgetSettings)
 
         GlanceAppWidgetManager(context)
             .getGlanceIds(ScheduleWidget::class.java)
@@ -82,6 +96,7 @@ class ScheduleWorkerTask @AssistedInject constructor(
                     preferences[ScheduleWidget.schedulePreferencesKey] = scheduleJson
                     preferences[ScheduleWidget.weekLabelPreferencesKey] =
                         schedule.weekLabel.ordinal.toString()
+                    preferences[ScheduleWidget.widgetSettingsPreferencesKey] = settingsJson
                 }
             }
         ScheduleWidget().updateAll(context)

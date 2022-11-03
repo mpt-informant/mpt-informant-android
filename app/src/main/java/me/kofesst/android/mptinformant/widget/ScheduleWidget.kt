@@ -34,18 +34,40 @@ import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
 import me.kofesst.android.mptinformer.domain.models.WeekLabel
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
 import java.io.File
 
 class ScheduleWidget : GlanceAppWidget() {
     companion object {
         val schedulePreferencesKey = stringPreferencesKey("schedule")
         val weekLabelPreferencesKey = stringPreferencesKey("week_label")
+        val widgetSettingsPreferencesKey = stringPreferencesKey("widget_settings")
     }
 
     override val stateDefinition = ScheduleWidgetStateDefinition
 
     @Composable
     override fun Content() {
+        val (schedule, weekLabel) = restoreScheduleState()
+        val widgetSettings = restoreWidgetSettings()
+        ScheduleWidgetLayout {
+            if (schedule == null) {
+                ScheduleWidgetError()
+            } else {
+                ScheduleWidgetContent(
+                    settings = widgetSettings,
+                    weekLabel = weekLabel,
+                    schedule = schedule,
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun restoreScheduleState(): Pair<GroupScheduleDay?, WeekLabel> {
         val state = currentState<Preferences>()
         val scheduleJson = state[schedulePreferencesKey]
         val schedule = if (scheduleJson != null) {
@@ -61,19 +83,17 @@ class ScheduleWidget : GlanceAppWidget() {
                 WeekLabel.None
             }
         }
+        return schedule to weekLabel
+    }
 
-        ScheduleWidgetLayout {
-            if (schedule == null) {
-                ScheduleWidgetError()
-            } else {
-                ScheduleWidgetContent(
-                    weekLabel = weekLabel,
-                    schedule = schedule,
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(20.dp)
-                )
-            }
+    @Composable
+    private fun restoreWidgetSettings(): WidgetSettings {
+        val state = currentState<Preferences>()
+        val settingsJson = state[widgetSettingsPreferencesKey]
+        return if (settingsJson != null) {
+            ScheduleWorkerTask.json.decodeFromString(settingsJson)
+        } else {
+            WidgetSettings()
         }
     }
 
@@ -107,6 +127,7 @@ class ScheduleWidget : GlanceAppWidget() {
     @Composable
     private fun ScheduleWidgetContent(
         modifier: GlanceModifier = GlanceModifier,
+        settings: WidgetSettings,
         schedule: GroupScheduleDay,
         weekLabel: WeekLabel,
     ) {
@@ -125,6 +146,7 @@ class ScheduleWidget : GlanceAppWidget() {
             LazyColumn(modifier = GlanceModifier.fillMaxWidth()) {
                 items(schedule.rows) { scheduleRow ->
                     ScheduleRowContent(
+                        settings = settings,
                         scheduleRow = scheduleRow,
                         weekLabel = weekLabel,
                         modifier = GlanceModifier
@@ -171,12 +193,14 @@ class ScheduleWidget : GlanceAppWidget() {
     @Composable
     private fun ScheduleRowContent(
         modifier: GlanceModifier = GlanceModifier,
+        settings: WidgetSettings,
         scheduleRow: GroupScheduleRow,
         weekLabel: WeekLabel,
     ) {
         when (scheduleRow) {
             is GroupScheduleRow.Single -> SingleScheduleRowContent(modifier, scheduleRow)
             is GroupScheduleRow.Divided -> DividedScheduleRowContent(
+                settings = settings,
                 scheduleRow = scheduleRow,
                 weekLabel = weekLabel,
                 modifier = modifier
@@ -211,6 +235,7 @@ class ScheduleWidget : GlanceAppWidget() {
     @Composable
     private fun DividedScheduleRowContent(
         modifier: GlanceModifier = GlanceModifier,
+        settings: WidgetSettings,
         scheduleRow: GroupScheduleRow.Divided,
         weekLabel: WeekLabel,
     ) {
@@ -227,22 +252,22 @@ class ScheduleWidget : GlanceAppWidget() {
             )
             Spacer(modifier = GlanceModifier.width(10.dp))
             Column {
-                when (weekLabel) {
-                    WeekLabel.Numerator -> {
-                        DividedScheduleRowLabel(
-                            scheduleRow = scheduleRow.numerator,
-                            rowWeekLabel = WeekLabel.Numerator,
-                            modifier = GlanceModifier.fillMaxWidth()
-                        )
+                if (!settings.hideLabel || weekLabel == WeekLabel.Numerator) {
+                    DividedScheduleRowLabel(
+                        scheduleRow = scheduleRow.numerator,
+                        rowWeekLabel = WeekLabel.Numerator,
+                        modifier = GlanceModifier.fillMaxWidth()
+                    )
+                    if (!settings.hideLabel) {
+                        Spacer(modifier = GlanceModifier.height(20.dp))
                     }
-                    WeekLabel.Denominator -> {
-                        DividedScheduleRowLabel(
-                            scheduleRow = scheduleRow.denominator,
-                            rowWeekLabel = WeekLabel.Denominator,
-                            modifier = GlanceModifier.fillMaxWidth()
-                        )
-                    }
-                    else -> Unit
+                }
+                if (!settings.hideLabel || weekLabel == WeekLabel.Denominator) {
+                    DividedScheduleRowLabel(
+                        scheduleRow = scheduleRow.denominator,
+                        rowWeekLabel = WeekLabel.Denominator,
+                        modifier = GlanceModifier.fillMaxWidth()
+                    )
                 }
             }
         }
