@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package me.kofesst.android.mptinformant.presentation
 
 import android.content.Intent
@@ -10,17 +12,24 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.OpenInNew
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
@@ -74,6 +84,43 @@ class MainActivity : ComponentActivity() {
             skipHalfExpanded = true
         )
         val coroutineScope = rememberCoroutineScope()
+        AppNavigationDrawer(
+            drawerState = drawerState,
+            sheetState = sheetState,
+            coroutineScope = coroutineScope,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AppBottomSettingsSheet(
+                sheetState = sheetState,
+                coroutineScope = coroutineScope
+            ) {
+                AppScaffold(
+                    coroutineScope = coroutineScope,
+                    drawerState = drawerState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CompositionLocalProvider(
+                        LocalAppState provides appState
+                    ) {
+                        GroupInfoView(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun AppNavigationDrawer(
+        modifier: Modifier = Modifier,
+        drawerState: DrawerState,
+        sheetState: ModalBottomSheetState,
+        coroutineScope: CoroutineScope,
+        content: @Composable () -> Unit,
+    ) {
         ModalNavigationDrawer(
             gesturesEnabled = drawerState.isOpen,
             drawerState = drawerState,
@@ -95,65 +142,78 @@ class MainActivity : ComponentActivity() {
                     startActivity(intent)
                 }
             },
-            modifier = Modifier.fillMaxSize()
-        ) {
-            ModalBottomSheetLayout(
-                sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-                sheetState = sheetState,
-                sheetContent = {
-                    BottomSettingsHeader(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                        }
+            content = content,
+            modifier = modifier
+        )
+    }
+
+    @Composable
+    private fun AppBottomSettingsSheet(
+        sheetState: ModalBottomSheetState,
+        coroutineScope: CoroutineScope,
+        content: @Composable () -> Unit,
+    ) {
+        val context = LocalContext.current
+        val appState = LocalAppState.current
+        val viewModel = hiltViewModel<MainViewModel>(
+            viewModelStoreOwner = this
+        )
+        val widgetSettingsForm by viewModel.widgetSettingsForm
+        ModalBottomSheetLayout(
+            sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+            sheetState = sheetState,
+            sheetContent = {
+                BottomSettingsHeader(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    coroutineScope.launch {
+                        sheetState.hide()
                     }
-                    val context = LocalContext.current
-                    val widgetSettingsForm by viewModel.widgetSettingsForm
-                    WidgetSettingsSaveResultHandler(result = viewModel.widgetSettingsSubmitResult) {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                        }
-                        appState.showSnackbar(
-                            message = ResourceString.widgetSettingsSaved.asString(context)
-                        )
+                }
+                WidgetSettingsSaveResultHandler(result = viewModel.widgetSettingsSubmitResult) {
+                    coroutineScope.launch {
+                        sheetState.hide()
                     }
-                    BottomSettingsContent(
-                        widgetSettingsForm = widgetSettingsForm,
-                        onFormAction = {
-                            viewModel.onWidgetSettingsFormAction(it)
-                        },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(20.dp)
+                    appState.showSnackbar(
+                        message = ResourceString.widgetSettingsSaved.asString(context)
                     )
                 }
-            ) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        }
+                BottomSettingsContent(
+                    widgetSettingsForm = widgetSettingsForm,
+                    onFormAction = {
+                        viewModel.onWidgetSettingsFormAction(it)
                     },
-                    snackbarHost = {
-                        SnackbarHost(hostState = appState.snackbarHostState)
-                    },
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CompositionLocalProvider(
-                        LocalAppState provides appState
-                    ) {
-                        GroupInfoView(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(it)
-                        )
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                )
+            },
+            content = content
+        )
+    }
+
+    @Composable
+    private fun AppScaffold(
+        modifier: Modifier = Modifier,
+        coroutineScope: CoroutineScope,
+        drawerState: DrawerState,
+        content: @Composable (PaddingValues) -> Unit,
+    ) {
+        val appState = LocalAppState.current
+        Scaffold(
+            topBar = {
+                TopAppBar {
+                    coroutineScope.launch {
+                        drawerState.open()
                     }
                 }
-            }
-        }
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = appState.snackbarHostState)
+            },
+            content = content,
+            modifier = modifier
+        )
     }
 
     @Composable
