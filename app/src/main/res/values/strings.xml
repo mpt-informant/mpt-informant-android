@@ -27,4 +27,14 @@
     <string name="departments_site">Сайты отделений</string>
     <string name="schedule_widget_desc">Расписание последней выбранной группы</string>
     <string name="schedule_widget_updates_soon">Виджет скоро обновится</string>
+    <string name="widget_settings">Настройки виджетов</string>
+    <string name="widget_settings_description">Настройки виджетов вступят в силу после обновления виджета (1 раз в 30 минут)</string>
+    <string name="widget_time_settings_description">Время, после которого день расписания в виджете будет меняться на следующий</string>
+    <string name="hours">Часов</string>
+    <string name="minutes">Минут</string>
+    <string name="widget_label_settings_description">Если в расписании есть пара по числителю, а текущая неделя знаменатель, эта пара не будет показываться в виджете</string>
+    <string name="widget_hide_label_settings">Скрывать пару с другим типом недели</string>
+    <string name="widget_changes_settings_description">Если в расписании дня в виджете есть замены, будет отображаться сообщение об этом</string>
+    <string name="widget_show_changes_message_settings">Показывать сообщение о заменах</string>
+    <string name="widget_settings_saved">Настройки виджетов сохранены</string>
 </resources>

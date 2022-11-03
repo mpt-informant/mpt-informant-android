@@ -1,5 +1,6 @@
 package me.kofesst.android.mptinformant.ui
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -40,11 +41,29 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val github = ResourceString(R.string.github)
         val departmentsSite = ResourceString(R.string.departments_site)
         val scheduleWidgetUpdatesSoon = ResourceString(R.string.schedule_widget_updates_soon)
+        val widgetSettings = ResourceString(R.string.widget_settings)
+        val widgetSettingsDescription = ResourceString(R.string.widget_settings_description)
+        val widgetTimeSettingsDescription =
+            ResourceString(R.string.widget_time_settings_description)
+        val hours = ResourceString(R.string.hours)
+        val minutes = ResourceString(R.string.minutes)
+        val widgetLabelSettingsDescription =
+            ResourceString(R.string.widget_label_settings_description)
+        val widgetHideLabelSettings = ResourceString(R.string.widget_hide_label_settings)
+        val widgetChangesSettingsDescription =
+            ResourceString(R.string.widget_changes_settings_description)
+        val widgetShowChangesMessageSettings =
+            ResourceString(R.string.widget_show_changes_message_settings)
+        val widgetSettingsSaved = ResourceString(R.string.widget_settings_saved)
     }
 
     @Composable
     fun asString(vararg formats: Any): String {
         return stringResource(resId, *formats)
+    }
+
+    fun asString(context: Context, vararg formats: Any): String {
+        return context.getString(resId, *formats)
     }
 
     @Composable
