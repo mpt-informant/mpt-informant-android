@@ -2,6 +2,7 @@ package me.kofesst.android.mptinformant.widget.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
@@ -21,6 +22,8 @@ import me.kofesst.android.mptinformant.data.utils.calendar
 import me.kofesst.android.mptinformant.data.utils.getDayOfWeek
 import me.kofesst.android.mptinformant.widget.ScheduleWidget
 import me.kofesst.android.mptinformer.domain.models.Group
+import me.kofesst.android.mptinformer.domain.models.WeekLabel
+import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
 import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
@@ -77,11 +80,35 @@ class ScheduleWorkerTask @AssistedInject constructor(
         scheduleSettings: Pair<String, String>?,
         widgetSettings: WidgetSettings,
     ) {
+        val schedule = getSavedSchedule(scheduleSettings) ?: return
+        val scheduleDay = getScheduleDayToDisplay(schedule, widgetSettings)
+        GlanceAppWidgetManager(context)
+            .getGlanceIds(ScheduleWidget::class.java)
+            .forEach { glanceId ->
+                updateAppWidgetState(context, glanceId) { preferences ->
+                    preferences.updateWidgetState(scheduleDay, schedule.weekLabel, widgetSettings)
+                }
+            }
+        ScheduleWidget().updateAll(context)
+    }
+
+    private suspend fun getSavedSchedule(
+        scheduleSettings: Pair<String, String>?,
+    ): GroupSchedule? {
         val groupId = scheduleSettings?.second
             ?: useCases.getDepartments().first().groups.first().id
-        val schedule = useCases.getGroupSchedule(
-            group = Group(id = groupId, name = "")
-        ) ?: return
+        return useCases.getGroupSchedule(
+            group = Group(
+                id = groupId,
+                name = ""
+            )
+        )
+    }
+
+    private fun getScheduleDayToDisplay(
+        schedule: GroupSchedule,
+        widgetSettings: WidgetSettings,
+    ): GroupScheduleDay {
         val currentDayOfWeek = Date().calendar().getDayOfWeek()
         val showNextDay = with(
             Calendar.getInstance().apply {
@@ -92,7 +119,7 @@ class ScheduleWorkerTask @AssistedInject constructor(
             val nextDayTime = widgetSettings.nextDayHours * 100 + widgetSettings.nextDayMinutes
             currentTime >= nextDayTime
         }
-        val dayToDisplay = schedule.days.firstOrNull { scheduleDay ->
+        return schedule.days.firstOrNull { scheduleDay ->
             scheduleDay.dayOfWeek == currentDayOfWeek.run {
                 if (showNextDay) {
                     next()
@@ -101,19 +128,17 @@ class ScheduleWorkerTask @AssistedInject constructor(
                 }
             }
         } ?: schedule.days.first()
-        val scheduleJson = json.encodeToString(dayToDisplay)
-        val settingsJson = json.encodeToString(widgetSettings)
+    }
 
-        GlanceAppWidgetManager(context)
-            .getGlanceIds(ScheduleWidget::class.java)
-            .forEach { glanceId ->
-                updateAppWidgetState(context, glanceId) { preferences ->
-                    preferences[ScheduleWidget.schedulePreferencesKey] = scheduleJson
-                    preferences[ScheduleWidget.weekLabelPreferencesKey] =
-                        schedule.weekLabel.ordinal.toString()
-                    preferences[ScheduleWidget.widgetSettingsPreferencesKey] = settingsJson
-                }
-            }
-        ScheduleWidget().updateAll(context)
+    private fun MutablePreferences.updateWidgetState(
+        scheduleDay: GroupScheduleDay,
+        weekLabel: WeekLabel,
+        widgetSettings: WidgetSettings,
+    ) {
+        val scheduleJson = json.encodeToString(scheduleDay)
+        val settingsJson = json.encodeToString(widgetSettings)
+        this[ScheduleWidget.schedulePreferencesKey] = scheduleJson
+        this[ScheduleWidget.weekLabelPreferencesKey] = weekLabel.ordinal.toString()
+        this[ScheduleWidget.widgetSettingsPreferencesKey] = settingsJson
     }
 }
