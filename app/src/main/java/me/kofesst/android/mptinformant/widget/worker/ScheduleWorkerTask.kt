@@ -83,8 +83,23 @@ class ScheduleWorkerTask @AssistedInject constructor(
             group = Group(id = groupId, name = "")
         ) ?: return
         val currentDayOfWeek = Date().calendar().getDayOfWeek()
+        val showNextDay = with(
+            Calendar.getInstance().apply {
+                time = Date()
+            }
+        ) {
+            val currentTime = get(Calendar.HOUR_OF_DAY) * 100 + get(Calendar.MINUTE)
+            val nextDayTime = widgetSettings.nextDayHours * 100 + widgetSettings.nextDayMinutes
+            currentTime >= nextDayTime
+        }
         val dayToDisplay = schedule.days.firstOrNull { scheduleDay ->
-            scheduleDay.dayOfWeek == currentDayOfWeek
+            scheduleDay.dayOfWeek == currentDayOfWeek.run {
+                if (showNextDay) {
+                    next()
+                } else {
+                    this
+                }
+            }
         } ?: schedule.days.first()
         val scheduleJson = json.encodeToString(dayToDisplay)
         val settingsJson = json.encodeToString(widgetSettings)
