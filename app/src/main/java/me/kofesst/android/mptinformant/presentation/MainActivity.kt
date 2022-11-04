@@ -1,10 +1,12 @@
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package me.kofesst.android.mptinformant.presentation
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +56,25 @@ import me.kofesst.android.mptinformant.ui.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val CHANGES_RECEIVER_ACTION = "NEW_CHANGES"
+    }
+
+    private val _changesReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (context == null || intent?.action == null) return
+            val text = intent.getStringExtra("data") ?: ""
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(CHANGES_RECEIVER_ACTION)
+        val receiverFlags = ContextCompat.RECEIVER_NOT_EXPORTED
+        ContextCompat.registerReceiver(this, _changesReceiver, filter, receiverFlags)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.glance.GlanceModifier
@@ -42,6 +43,7 @@ class ScheduleWidget : GlanceAppWidget() {
         val schedulePreferencesKey = stringPreferencesKey("schedule")
         val weekLabelPreferencesKey = stringPreferencesKey("week_label")
         val widgetSettingsPreferencesKey = stringPreferencesKey("widget_settings")
+        val hasChanges = booleanPreferencesKey("has_changes")
     }
 
     override val stateDefinition = ScheduleWidgetStateDefinition
@@ -50,6 +52,7 @@ class ScheduleWidget : GlanceAppWidget() {
     override fun Content() {
         val (schedule, weekLabel) = restoreScheduleState()
         val widgetSettings = restoreWidgetSettings()
+        val hasChanges = restoreChangesState()
         ScheduleWidgetLayout {
             if (schedule == null) {
                 ScheduleWidgetError()
@@ -58,6 +61,7 @@ class ScheduleWidget : GlanceAppWidget() {
                     settings = widgetSettings,
                     weekLabel = weekLabel,
                     schedule = schedule,
+                    hasChanges = hasChanges,
                     modifier = GlanceModifier
                         .fillMaxSize()
                         .padding(20.dp)
@@ -98,6 +102,12 @@ class ScheduleWidget : GlanceAppWidget() {
     }
 
     @Composable
+    private fun restoreChangesState(): Boolean {
+        val state = currentState<Preferences>()
+        return state[hasChanges] ?: false
+    }
+
+    @Composable
     private fun ScheduleWidgetLayout(
         content: @Composable ColumnScope.() -> Unit,
     ) {
@@ -130,6 +140,7 @@ class ScheduleWidget : GlanceAppWidget() {
         settings: WidgetSettings,
         schedule: GroupScheduleDay,
         weekLabel: WeekLabel,
+        hasChanges: Boolean,
     ) {
         Column(
             modifier = modifier,
@@ -138,6 +149,8 @@ class ScheduleWidget : GlanceAppWidget() {
                 weekLabel = weekLabel,
                 title = schedule.dayOfWeek.uiText().asGlanceString(),
                 branch = schedule.branch,
+                settings = settings,
+                hasChanges = hasChanges,
                 modifier = GlanceModifier.fillMaxWidth()
             )
             Spacer(
@@ -164,6 +177,8 @@ class ScheduleWidget : GlanceAppWidget() {
         weekLabel: WeekLabel,
         title: String,
         branch: String,
+        settings: WidgetSettings,
+        hasChanges: Boolean,
     ) {
         ColoredSurface(
             modifier = modifier,
@@ -184,6 +199,15 @@ class ScheduleWidget : GlanceAppWidget() {
                         color = ColorProvider(md_theme_dark_onSurface),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+            if (hasChanges && settings.showChangesMessage) {
+                Text(
+                    text = ResourceString.hasChangesInDay.asGlanceString(),
+                    style = TextStyle(
+                        color = ColorProvider(md_theme_dark_error),
+                        fontSize = 14.sp
                     )
                 )
             }

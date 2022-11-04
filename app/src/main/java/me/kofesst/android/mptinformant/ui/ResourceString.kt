@@ -55,6 +55,12 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val widgetShowChangesMessageSettings =
             ResourceString(R.string.widget_show_changes_message_settings)
         val widgetSettingsSaved = ResourceString(R.string.widget_settings_saved)
+        val changesNotificationChannelDescription =
+            ResourceString(R.string.changes_notification_channel_description)
+        val newChangesNotificationTitle = ResourceString(R.string.new_changes_notification_title)
+        val newChangesNotificationDescription =
+            ResourceString(R.string.new_changes_notification_description)
+        val hasChangesInDay = ResourceString(R.string.has_changes_in_day)
     }
 
     @Composable
