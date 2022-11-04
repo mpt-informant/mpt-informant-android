@@ -50,7 +50,7 @@ import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.components.OutlinedNumericTextField
 import me.kofesst.android.mptinformant.ui.theme.AppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +67,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun MainActivityContent() {
         val viewModel = hiltViewModel<MainViewModel>(
@@ -84,23 +83,23 @@ class MainActivity : ComponentActivity() {
             skipHalfExpanded = true
         )
         val coroutineScope = rememberCoroutineScope()
-        AppNavigationDrawer(
-            drawerState = drawerState,
-            sheetState = sheetState,
-            coroutineScope = coroutineScope,
-            modifier = Modifier.fillMaxSize()
+        CompositionLocalProvider(
+            LocalAppState provides appState
         ) {
-            AppBottomSettingsSheet(
+            AppNavigationDrawer(
+                drawerState = drawerState,
                 sheetState = sheetState,
-                coroutineScope = coroutineScope
+                coroutineScope = coroutineScope,
+                modifier = Modifier.fillMaxSize()
             ) {
-                AppScaffold(
-                    coroutineScope = coroutineScope,
-                    drawerState = drawerState,
-                    modifier = Modifier.fillMaxSize()
+                AppBottomSettingsSheet(
+                    sheetState = sheetState,
+                    coroutineScope = coroutineScope
                 ) {
-                    CompositionLocalProvider(
-                        LocalAppState provides appState
+                    AppScaffold(
+                        coroutineScope = coroutineScope,
+                        drawerState = drawerState,
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         GroupInfoView(
                             modifier = Modifier
