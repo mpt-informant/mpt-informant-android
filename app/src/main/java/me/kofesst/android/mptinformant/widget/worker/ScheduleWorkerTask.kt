@@ -146,8 +146,11 @@ class ScheduleWorkerTask @AssistedInject constructor(
     }
 
     private fun checkForNewChanges(newChanges: GroupChanges?) {
-        if (newChanges == null || newChanges == changes) return
+        val shouldNotify =
+            newChanges != null && newChanges.days.isNotEmpty() && newChanges != changes
         changes = newChanges
+
+        if (!shouldNotify) return
 
         Intent().also { intent ->
             val intentData = ResourceString.newChangesNotificationDescription.asString(context)
