@@ -27,9 +27,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import kotlinx.serialization.decodeFromString
 import me.kofesst.android.mptinformant.ui.ResourceString
-import me.kofesst.android.mptinformant.ui.theme.color
-import me.kofesst.android.mptinformant.ui.theme.md_theme_dark_onSurface
-import me.kofesst.android.mptinformant.ui.theme.md_theme_dark_surface
+import me.kofesst.android.mptinformant.ui.theme.*
 import me.kofesst.android.mptinformant.ui.uiText
 import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
 import me.kofesst.android.mptinformer.domain.models.WeekLabel
@@ -238,7 +236,10 @@ class ScheduleWidget : GlanceAppWidget() {
         modifier: GlanceModifier = GlanceModifier,
         scheduleRow: GroupScheduleRow.Single,
     ) {
-        Row(modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.Vertical.CenterVertically,
+            modifier = modifier
+        ) {
             Text(
                 text = ResourceString.lessonNumberFormat.asGlanceString(scheduleRow.lessonNumber),
                 style = TextStyle(
@@ -246,13 +247,16 @@ class ScheduleWidget : GlanceAppWidget() {
                     fontSize = 16.sp
                 )
             )
-            Spacer(
-                modifier = GlanceModifier.width(10.dp)
-            )
-            ScheduleRowColumn(
-                subject = scheduleRow.lesson,
-                teacher = scheduleRow.teacher
-            )
+            Spacer(modifier = GlanceModifier.width(10.dp))
+            ColoredSurface(
+                color = md_theme_dark_surfaceVariant,
+                modifier = GlanceModifier.fillMaxWidth()
+            ) {
+                ScheduleRowColumn(
+                    subject = scheduleRow.lesson,
+                    teacher = scheduleRow.teacher
+                )
+            }
         }
     }
 
