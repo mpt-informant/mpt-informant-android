@@ -7,5 +7,11 @@ enum class DayOfWeek {
     Wednesday,
     Thursday,
     Friday,
-    Saturday
+    Saturday;
+
+    fun next() = if (ordinal == Saturday.ordinal) {
+        Sunday
+    } else {
+        values()[ordinal + 1]
+    }
 }

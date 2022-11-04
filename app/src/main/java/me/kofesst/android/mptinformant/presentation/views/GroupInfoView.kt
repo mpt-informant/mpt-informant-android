@@ -119,7 +119,7 @@ private fun PageTabs(
                 selected = value == tab,
                 text = {
                     Text(
-                        text = value.uiText().normalize(),
+                        text = value.uiText().asString().normalize(),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 },

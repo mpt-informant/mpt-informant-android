@@ -39,7 +39,7 @@ fun GroupScheduleColumn(
                     .clip(RoundedCornerShape(size = 20.dp))
             ) {
                 Text(
-                    text = schedule.weekLabel.uiText(),
+                    text = schedule.weekLabel.uiText().asString(),
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -75,7 +75,7 @@ private fun GroupScheduleDayCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = scheduleDay.dayOfWeek.uiText().uppercase(),
+                text = scheduleDay.dayOfWeek.uiText().asString().uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )

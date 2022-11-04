@@ -18,4 +18,6 @@ class UseCases(
     val restoreScheduleSettings: RestoreScheduleSettings = RestoreScheduleSettings(
         preferencesRepository
     ),
+    val saveWidgetSettings: SaveWidgetSettings = SaveWidgetSettings(preferencesRepository),
+    val restoreWidgetSettings: RestoreWidgetSettings = RestoreWidgetSettings(preferencesRepository),
 )
