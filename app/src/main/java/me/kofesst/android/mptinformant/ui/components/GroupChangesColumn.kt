@@ -56,7 +56,7 @@ private fun GroupChangesDayCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = changesDay.dayOfWeek.uiText().normalize(),
+                text = changesDay.dayOfWeek.uiText().asString().normalize(),
                 style = MaterialTheme.typography.bodyLarge
             )
             Divider(
