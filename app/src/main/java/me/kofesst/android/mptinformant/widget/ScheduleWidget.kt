@@ -25,6 +25,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import java.io.File
 import kotlinx.serialization.decodeFromString
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.*
@@ -34,7 +35,6 @@ import me.kofesst.android.mptinformer.domain.models.WeekLabel
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
 import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
-import java.io.File
 
 class ScheduleWidget : GlanceAppWidget() {
     companion object {
@@ -376,5 +376,5 @@ object ScheduleWidgetStateDefinition : GlanceStateDefinition<Preferences> {
 
     private const val fileName = "schedule_widget_store"
     private val Context.scheduleWidgetDataStore: DataStore<Preferences>
-            by preferencesDataStore(name = fileName)
+        by preferencesDataStore(name = fileName)
 }
