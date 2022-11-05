@@ -34,10 +34,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -311,17 +313,30 @@ class MainActivity : ComponentActivity() {
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            ExtendedFloatingActionButton(
-                onClick = {
-                    onFormAction(WidgetSettingsFormAction.Submit)
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Сохранить изменения",
-                    style = MaterialTheme.typography.bodyLarge
-                )
+            SaveWidgetSettingsButton(modifier = Modifier.fillMaxWidth()) {
+                onFormAction(WidgetSettingsFormAction.Submit)
             }
+        }
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    fun SaveWidgetSettingsButton(
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
+    ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        ExtendedFloatingActionButton(
+            onClick = {
+                keyboardController?.hide()
+                onClick()
+            },
+            modifier = modifier
+        ) {
+            Text(
+                text = ResourceString.saveChanges.asString(),
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 

@@ -1,5 +1,6 @@
 package me.kofesst.android.mptinformant.widget
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -27,6 +28,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import java.io.File
 import kotlinx.serialization.decodeFromString
+import me.kofesst.android.mptinformant.di.App
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.*
 import me.kofesst.android.mptinformant.ui.uiText
@@ -350,19 +352,31 @@ class ScheduleWidget : GlanceAppWidget() {
                     fontSize = 16.sp
                 )
             )
-            Text(
-                text = teacher,
-                style = TextStyle(
-                    color = ColorProvider(md_theme_dark_onSurface),
-                    fontSize = 14.sp
+            if (teacher.isNotBlank()) {
+                Text(
+                    text = teacher,
+                    style = TextStyle(
+                        color = ColorProvider(md_theme_dark_onSurface),
+                        fontSize = 14.sp
+                    )
                 )
-            )
+            }
         }
     }
 }
 
 class ScheduleWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ScheduleWidget()
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray,
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        val application = context.applicationContext as? App ?: return
+        application.restartScheduleWorkerTask()
+    }
 }
 
 object ScheduleWidgetStateDefinition : GlanceStateDefinition<Preferences> {

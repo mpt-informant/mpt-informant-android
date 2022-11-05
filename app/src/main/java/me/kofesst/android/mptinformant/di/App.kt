@@ -22,7 +22,7 @@ class App : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        delayedInit()
+        startScheduleWorkerTask()
     }
 
     override fun getWorkManagerConfiguration(): Configuration =
@@ -31,13 +31,19 @@ class App : Application(), Configuration.Provider {
             .setMinimumLoggingLevel(Log.DEBUG)
             .build()
 
-    private fun delayedInit() {
+    fun restartScheduleWorkerTask() {
+        WorkManager.getInstance(this)
+            .cancelUniqueWork(ScheduleWorkerTask.UNIQUE_WORKER_TAG)
+        startScheduleWorkerTask()
+    }
+
+    private fun startScheduleWorkerTask() {
         CoroutineScope(Dispatchers.Default).launch {
-            setupRecurringWork()
+            setupScheduleWorkerTask()
         }
     }
 
-    private fun setupRecurringWork() {
+    private fun setupScheduleWorkerTask() {
         val scheduleTaskRequest = PeriodicWorkRequest.Builder(
             ScheduleWorkerTask::class.java,
             15L,
@@ -45,7 +51,7 @@ class App : Application(), Configuration.Provider {
         ).build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "ScheduleTask",
+            ScheduleWorkerTask.UNIQUE_WORKER_TAG,
             ExistingPeriodicWorkPolicy.KEEP,
             scheduleTaskRequest
         )
