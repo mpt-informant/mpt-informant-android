@@ -41,4 +41,5 @@
     <string name="new_changes_notification_title">Новые замены</string>
     <string name="new_changes_notification_description">У вашей группы появились новые замены в расписании</string>
     <string name="has_changes_in_day">Есть замены</string>
+    <string name="save_changes">Сохранить изменения</string>
 </resources>

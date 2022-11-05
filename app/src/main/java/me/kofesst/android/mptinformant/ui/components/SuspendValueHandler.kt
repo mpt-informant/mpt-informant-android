@@ -1,11 +1,11 @@
 package me.kofesst.android.mptinformant.ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
 import me.kofesst.android.mptinformant.ui.ResourceString
@@ -24,7 +24,7 @@ fun <T : Any> SuspendValueHandler(
                 iconTint = MaterialTheme.colorScheme.error,
                 message = ResourceString.unexpectedError.asString(),
                 messageStyle = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.fillMaxSize()
             )
         } else {
             if (loadedValue != null) {
