@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -16,6 +17,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
+import me.kofesst.android.mptinformant.di.App
 import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
 import me.kofesst.android.mptinformant.presentation.utils.normalize
 import me.kofesst.android.mptinformant.ui.ResourceString
@@ -250,6 +252,7 @@ private fun SettingsPanel(
     onDepartmentChange: (Department) -> Unit,
     onGroupChange: (Group) -> Unit,
 ) {
+    val application = LocalContext.current.applicationContext as App
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -261,6 +264,7 @@ private fun SettingsPanel(
                     text = department.name,
                     onSelected = {
                         onDepartmentChange(department)
+                        application.restartScheduleWorkerTask()
                     }
                 )
             },
@@ -274,6 +278,7 @@ private fun SettingsPanel(
                     text = group.name,
                     onSelected = {
                         onGroupChange(group)
+                        application.restartScheduleWorkerTask()
                     }
                 )
             },
