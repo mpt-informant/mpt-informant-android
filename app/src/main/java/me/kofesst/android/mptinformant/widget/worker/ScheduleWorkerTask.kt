@@ -70,6 +70,7 @@ class ScheduleWorkerTask @AssistedInject constructor(
             }
         }
 
+        const val UNIQUE_WORKER_TAG = "SCHEDULE_WORKER_TASK"
         private const val CHANGES_CHANNEL_ID = "MPT Informant Changes"
     }
 
