@@ -1,6 +1,7 @@
 package me.kofesst.android.mptinformant.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -27,20 +28,22 @@ fun IconMessage(
     message: String,
     messageStyle: TextStyle = TextStyle.Default,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(iconSpacing),
-        modifier = modifier.verticalScroll(rememberScrollState())
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = iconTint,
-            modifier = Modifier.size(iconSize)
-        )
-        Text(
-            text = message,
-            style = messageStyle
-        )
+    Box(modifier = modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(iconSpacing),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconTint,
+                modifier = Modifier.size(iconSize)
+            )
+            Text(
+                text = message,
+                style = messageStyle
+            )
+        }
     }
 }

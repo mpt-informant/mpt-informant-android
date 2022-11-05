@@ -187,15 +187,13 @@ private fun ScheduleTabContent(
         ) {
             when {
                 it.days.isEmpty() -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        IconMessage(
-                            icon = Icons.Outlined.Mood,
-                            iconTint = MaterialTheme.colorScheme.onBackground,
-                            message = ResourceString.emptySchedule.asString(),
-                            messageStyle = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                    IconMessage(
+                        icon = Icons.Outlined.Mood,
+                        iconTint = MaterialTheme.colorScheme.onBackground,
+                        message = ResourceString.emptySchedule.asString(),
+                        messageStyle = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 else -> {
                     GroupScheduleColumn(
@@ -226,15 +224,13 @@ private fun ChangesTabContent(
         ) {
             when {
                 it.days.isEmpty() -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        IconMessage(
-                            icon = Icons.Outlined.Mood,
-                            iconTint = MaterialTheme.colorScheme.onBackground,
-                            message = ResourceString.emptyChanges.asString(),
-                            messageStyle = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                    IconMessage(
+                        icon = Icons.Outlined.Mood,
+                        iconTint = MaterialTheme.colorScheme.onBackground,
+                        message = ResourceString.emptyChanges.asString(),
+                        messageStyle = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 else -> {
                     GroupChangesColumn(
