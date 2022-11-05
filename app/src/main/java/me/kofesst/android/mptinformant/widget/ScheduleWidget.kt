@@ -350,13 +350,15 @@ class ScheduleWidget : GlanceAppWidget() {
                     fontSize = 16.sp
                 )
             )
-            Text(
-                text = teacher,
-                style = TextStyle(
-                    color = ColorProvider(md_theme_dark_onSurface),
-                    fontSize = 14.sp
+            if (teacher.isNotBlank()) {
+                Text(
+                    text = teacher,
+                    style = TextStyle(
+                        color = ColorProvider(md_theme_dark_onSurface),
+                        fontSize = 14.sp
+                    )
                 )
-            )
+            }
         }
     }
 }
