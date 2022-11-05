@@ -193,7 +193,6 @@ class ScheduleWorkerTask @AssistedInject constructor(
         schedule: GroupSchedule,
         widgetSettings: WidgetSettings,
     ): GroupScheduleDay {
-        val currentDayOfWeek = Date().calendar().getDayOfWeek()
         val showNextDay = with(
             Calendar.getInstance().apply {
                 time = Date()
@@ -203,14 +202,15 @@ class ScheduleWorkerTask @AssistedInject constructor(
             val nextDayTime = widgetSettings.nextDayHours * 100 + widgetSettings.nextDayMinutes
             currentTime >= nextDayTime
         }
-        return schedule.days.firstOrNull { scheduleDay ->
-            scheduleDay.dayOfWeek == currentDayOfWeek.run {
-                if (showNextDay) {
-                    next()
-                } else {
-                    this
-                }
+        val dayOfWeek = Date().calendar().getDayOfWeek().run {
+            if (showNextDay) {
+                next()
+            } else {
+                this
             }
+        }
+        return schedule.days.firstOrNull { scheduleDay ->
+            scheduleDay.dayOfWeek == dayOfWeek
         } ?: schedule.days.first()
     }
 
