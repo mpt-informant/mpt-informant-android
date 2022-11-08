@@ -62,6 +62,7 @@ class ResourceString private constructor(@StringRes val resId: Int) {
             ResourceString(R.string.new_changes_notification_description)
         val hasChangesInDay = ResourceString(R.string.has_changes_in_day)
         val saveChanges = ResourceString(R.string.save_changes)
+        val timeFormat = ResourceString(R.string.time_format)
     }
 
     @Composable

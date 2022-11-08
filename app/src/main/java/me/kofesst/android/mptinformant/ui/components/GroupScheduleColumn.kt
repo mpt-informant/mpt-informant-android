@@ -138,60 +138,6 @@ private fun GroupScheduleRow(
     modifier: Modifier = Modifier,
     scheduleRow: GroupScheduleRow,
 ) {
-    when (scheduleRow) {
-        is GroupScheduleRow.Single -> {
-            SingleGroupScheduleRow(
-                scheduleRow = scheduleRow,
-                modifier = modifier
-            )
-        }
-        is GroupScheduleRow.Divided -> {
-            DividedGroupScheduleRow(
-                scheduleRow = scheduleRow,
-                modifier = modifier
-            )
-        }
-        else -> Unit
-    }
-}
-
-@Composable
-private fun SingleGroupScheduleRow(
-    modifier: Modifier = Modifier,
-    scheduleRow: GroupScheduleRow.Single,
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        Text(
-            text = "${scheduleRow.lessonNumber}.",
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Column(
-            modifier = Modifier.weight(1.0f)
-        ) {
-            Text(
-                text = scheduleRow.lesson,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            if (scheduleRow.teacher.isNotBlank()) {
-                Text(
-                    text = scheduleRow.teacher,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Light
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DividedGroupScheduleRow(
-    modifier: Modifier = Modifier,
-    scheduleRow: GroupScheduleRow.Divided,
-) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -201,21 +147,81 @@ private fun DividedGroupScheduleRow(
             text = ResourceString.lessonNumberFormat.asString(scheduleRow.lessonNumber),
             style = MaterialTheme.typography.bodyLarge
         )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.weight(1.0f)
-        ) {
-            GroupScheduleDayLabel(
-                weekLabel = WeekLabel.Numerator,
-                label = scheduleRow.numerator,
-                modifier = Modifier.fillMaxWidth()
-            )
-            GroupScheduleDayLabel(
-                weekLabel = WeekLabel.Denominator,
-                label = scheduleRow.denominator,
-                modifier = Modifier.fillMaxWidth()
+        when (scheduleRow) {
+            is GroupScheduleRow.Single -> {
+                SingleGroupScheduleRow(
+                    scheduleRow = scheduleRow,
+                    modifier = Modifier.weight(1.0f)
+                )
+            }
+            is GroupScheduleRow.Divided -> {
+                DividedGroupScheduleRow(
+                    scheduleRow = scheduleRow,
+                    modifier = Modifier.weight(1.0f)
+                )
+            }
+            else -> Unit
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            with(scheduleRow.timeTable) {
+                Text(
+                    text = ResourceString.timeFormat.asString(
+                        startTime.hour.toString().padStart(2, '0'),
+                        startTime.minute.toString().padStart(2, '0'),
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = ResourceString.timeFormat.asString(
+                        endTime.hour.toString().padStart(2, '0'),
+                        endTime.minute.toString().padStart(2, '0'),
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SingleGroupScheduleRow(
+    modifier: Modifier = Modifier,
+    scheduleRow: GroupScheduleRow.Single,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = scheduleRow.lesson,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        if (scheduleRow.teacher.isNotBlank()) {
+            Text(
+                text = scheduleRow.teacher,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Light
             )
         }
+    }
+}
+
+@Composable
+private fun DividedGroupScheduleRow(
+    modifier: Modifier = Modifier,
+    scheduleRow: GroupScheduleRow.Divided,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = modifier
+    ) {
+        GroupScheduleDayLabel(
+            weekLabel = WeekLabel.Numerator,
+            label = scheduleRow.numerator,
+            modifier = Modifier.fillMaxWidth()
+        )
+        GroupScheduleDayLabel(
+            weekLabel = WeekLabel.Denominator,
+            label = scheduleRow.denominator,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
