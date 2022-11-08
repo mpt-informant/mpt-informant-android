@@ -20,4 +20,7 @@ class UseCases(
     ),
     val saveWidgetSettings: SaveWidgetSettings = SaveWidgetSettings(preferencesRepository),
     val restoreWidgetSettings: RestoreWidgetSettings = RestoreWidgetSettings(preferencesRepository),
+    val saveLastGroupChanges: SaveLastGroupChanges = SaveLastGroupChanges(preferencesRepository),
+    val restoreLastGroupChanges: RestoreLastGroupChanges = RestoreLastGroupChanges(
+        preferencesRepository),
 )

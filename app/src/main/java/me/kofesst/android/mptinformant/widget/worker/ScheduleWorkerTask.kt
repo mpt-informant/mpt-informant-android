@@ -74,7 +74,6 @@ class ScheduleWorkerTask @AssistedInject constructor(
         private const val CHANGES_CHANNEL_ID = "MPT Informant Changes"
     }
 
-    private var changes: GroupChanges? = null
     private var changesNotificationId: Int = 1
 
     init {
@@ -106,14 +105,21 @@ class ScheduleWorkerTask @AssistedInject constructor(
             ?: useCases.getDepartments().first().groups.first().id
         val schedule = getSchedule(groupId) ?: return
         val scheduleDay = getScheduleDayToDisplay(schedule, widgetSettings)
-        checkForNewChanges(getChanges(groupId))
+        val lastChanges = useCases.restoreLastGroupChanges()
+        checkForNewChanges(
+            lastChanges = lastChanges,
+            newChanges = getChanges(groupId)
+        )
         GlanceAppWidgetManager(context)
             .getGlanceIds(ScheduleWidget::class.java)
             .forEach { glanceId ->
                 updateAppWidgetState(context, glanceId) { preferences ->
                     preferences.updateWidgetState(
                         scheduleDay = scheduleDay,
-                        hasChanges = hasChangesForScheduleDay(scheduleDay),
+                        hasChanges = hasChangesForScheduleDay(
+                            changes = lastChanges,
+                            scheduleDay = scheduleDay
+                        ),
                         weekLabel = schedule.weekLabel,
                         widgetSettings = widgetSettings
                     )
@@ -122,7 +128,10 @@ class ScheduleWorkerTask @AssistedInject constructor(
         ScheduleWidget().updateAll(context)
     }
 
-    private fun hasChangesForScheduleDay(scheduleDay: GroupScheduleDay): Boolean {
+    private fun hasChangesForScheduleDay(
+        changes: GroupChanges?,
+        scheduleDay: GroupScheduleDay,
+    ): Boolean {
         return changes?.days?.firstOrNull { changesDay ->
             changesDay.dayOfWeek == scheduleDay.dayOfWeek
         } != null
@@ -146,10 +155,13 @@ class ScheduleWorkerTask @AssistedInject constructor(
         )
     }
 
-    private fun checkForNewChanges(newChanges: GroupChanges?) {
+    private suspend fun checkForNewChanges(
+        lastChanges: GroupChanges?,
+        newChanges: GroupChanges?,
+    ) {
         val shouldNotify =
-            newChanges != null && newChanges.days.isNotEmpty() && newChanges != changes
-        changes = newChanges
+            newChanges != null && newChanges.days.isNotEmpty() && newChanges != lastChanges
+        useCases.saveLastGroupChanges(newChanges)
 
         if (!shouldNotify) return
 

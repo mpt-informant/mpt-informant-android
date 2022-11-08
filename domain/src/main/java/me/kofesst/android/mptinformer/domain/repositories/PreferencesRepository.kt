@@ -2,6 +2,7 @@ package me.kofesst.android.mptinformer.domain.repositories
 
 import me.kofesst.android.mptinformer.domain.models.Department
 import me.kofesst.android.mptinformer.domain.models.Group
+import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
 import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
 
 interface PreferencesRepository {
@@ -10,4 +11,7 @@ interface PreferencesRepository {
 
     suspend fun saveWidgetSettings(widgetSettings: WidgetSettings)
     suspend fun restoreWidgetSettings(): WidgetSettings
+
+    suspend fun saveLastGroupChanges(changes: GroupChanges?)
+    suspend fun restoreLastGroupChanges(): GroupChanges?
 }
