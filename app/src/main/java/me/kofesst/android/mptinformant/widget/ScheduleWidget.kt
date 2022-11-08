@@ -266,7 +266,7 @@ class ScheduleWidget : GlanceAppWidget() {
                         ),
                         style = TextStyle(
                             color = ColorProvider(md_theme_dark_onSurface),
-                            fontSize = 16.sp
+                            fontSize = 14.sp
                         )
                     )
                 }
