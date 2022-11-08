@@ -3,6 +3,7 @@ package me.kofesst.android.mptinformant.widget.worker
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -194,12 +195,29 @@ class ScheduleWorkerTask @AssistedInject constructor(
     private fun buildChangesNotification(): Notification {
         val contentTitle = ResourceString.newChangesNotificationTitle.asString(context)
         val contentText = ResourceString.newChangesNotificationDescription.asString(context)
+        val contentIntent = createChangesNotificationIntent()
         return NotificationCompat.Builder(context, CHANGES_CHANNEL_ID)
+            .setContentIntent(contentIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
+    }
+
+    private fun createChangesNotificationIntent(): PendingIntent {
+        val activityIntent = Intent(context, MainActivity::class.java)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+        } else {
+            PendingIntent.FLAG_CANCEL_CURRENT
+        }
+        return PendingIntent.getActivity(
+            context,
+            0,
+            activityIntent,
+            flags
+        )
     }
 
     private fun getScheduleDayToDisplay(
