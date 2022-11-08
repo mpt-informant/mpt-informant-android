@@ -197,12 +197,15 @@ class ScheduleWorkerTask @AssistedInject constructor(
         val contentText = ResourceString.newChangesNotificationDescription.asString(context)
         val contentIntent = createChangesNotificationIntent()
         return NotificationCompat.Builder(context, CHANGES_CHANNEL_ID)
+            .setAutoCancel(true)
             .setContentIntent(contentIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+            .build().apply {
+                flags = flags or Notification.FLAG_AUTO_CANCEL
+            }
     }
 
     private fun createChangesNotificationIntent(): PendingIntent {
