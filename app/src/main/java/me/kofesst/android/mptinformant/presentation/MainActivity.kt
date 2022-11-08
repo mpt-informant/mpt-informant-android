@@ -77,6 +77,11 @@ class MainActivity : ComponentActivity() {
         ContextCompat.registerReceiver(this, _changesReceiver, filter, receiverFlags)
     }
 
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(_changesReceiver)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
