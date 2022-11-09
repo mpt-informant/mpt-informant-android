@@ -1,5 +1,6 @@
 package me.kofesst.android.mptinformant.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,17 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import me.kofesst.android.mptinformant.data.utils.isToday
 import me.kofesst.android.mptinformant.presentation.utils.normalize
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.color
 import me.kofesst.android.mptinformant.ui.uiText
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
 
 @Composable
 fun GroupScheduleColumn(
@@ -54,11 +58,33 @@ fun GroupScheduleColumn(
         ) { day ->
             GroupScheduleDayCard(
                 scheduleDay = day,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .todayCardModifier(
+                        scheduleDay = day,
+                        color = schedule.weekLabel.color(),
+                        shape = CardDefaults.outlinedShape
+                    )
             )
         }
     }
 }
+
+private fun Modifier.todayCardModifier(
+    scheduleDay: GroupScheduleDay,
+    color: Color,
+    shape: Shape,
+) = then(
+    if (scheduleDay.isToday()) {
+        Modifier.border(
+            width = 3.dp,
+            color = color,
+            shape = shape
+        )
+    } else {
+        Modifier
+    }
+)
 
 @Composable
 private fun GroupScheduleDayCard(
@@ -112,60 +138,6 @@ private fun GroupScheduleRow(
     modifier: Modifier = Modifier,
     scheduleRow: GroupScheduleRow,
 ) {
-    when (scheduleRow) {
-        is GroupScheduleRow.Single -> {
-            SingleGroupScheduleRow(
-                scheduleRow = scheduleRow,
-                modifier = modifier
-            )
-        }
-        is GroupScheduleRow.Divided -> {
-            DividedGroupScheduleRow(
-                scheduleRow = scheduleRow,
-                modifier = modifier
-            )
-        }
-        else -> Unit
-    }
-}
-
-@Composable
-private fun SingleGroupScheduleRow(
-    modifier: Modifier = Modifier,
-    scheduleRow: GroupScheduleRow.Single,
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        Text(
-            text = "${scheduleRow.lessonNumber}.",
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Column(
-            modifier = Modifier.weight(1.0f)
-        ) {
-            Text(
-                text = scheduleRow.lesson,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            if (scheduleRow.teacher.isNotBlank()) {
-                Text(
-                    text = scheduleRow.teacher,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Light
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DividedGroupScheduleRow(
-    modifier: Modifier = Modifier,
-    scheduleRow: GroupScheduleRow.Divided,
-) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -175,21 +147,81 @@ private fun DividedGroupScheduleRow(
             text = ResourceString.lessonNumberFormat.asString(scheduleRow.lessonNumber),
             style = MaterialTheme.typography.bodyLarge
         )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.weight(1.0f)
-        ) {
-            GroupScheduleDayLabel(
-                weekLabel = WeekLabel.Numerator,
-                label = scheduleRow.numerator,
-                modifier = Modifier.fillMaxWidth()
-            )
-            GroupScheduleDayLabel(
-                weekLabel = WeekLabel.Denominator,
-                label = scheduleRow.denominator,
-                modifier = Modifier.fillMaxWidth()
+        when (scheduleRow) {
+            is GroupScheduleRow.Single -> {
+                SingleGroupScheduleRow(
+                    scheduleRow = scheduleRow,
+                    modifier = Modifier.weight(1.0f)
+                )
+            }
+            is GroupScheduleRow.Divided -> {
+                DividedGroupScheduleRow(
+                    scheduleRow = scheduleRow,
+                    modifier = Modifier.weight(1.0f)
+                )
+            }
+            else -> Unit
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            with(scheduleRow.timeTable) {
+                Text(
+                    text = ResourceString.timeFormat.asString(
+                        startTime.hour.toString().padStart(2, '0'),
+                        startTime.minute.toString().padStart(2, '0'),
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = ResourceString.timeFormat.asString(
+                        endTime.hour.toString().padStart(2, '0'),
+                        endTime.minute.toString().padStart(2, '0'),
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SingleGroupScheduleRow(
+    modifier: Modifier = Modifier,
+    scheduleRow: GroupScheduleRow.Single,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = scheduleRow.lesson,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        if (scheduleRow.teacher.isNotBlank()) {
+            Text(
+                text = scheduleRow.teacher,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Light
             )
         }
+    }
+}
+
+@Composable
+private fun DividedGroupScheduleRow(
+    modifier: Modifier = Modifier,
+    scheduleRow: GroupScheduleRow.Divided,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = modifier
+    ) {
+        GroupScheduleDayLabel(
+            weekLabel = WeekLabel.Numerator,
+            label = scheduleRow.numerator,
+            modifier = Modifier.fillMaxWidth()
+        )
+        GroupScheduleDayLabel(
+            weekLabel = WeekLabel.Denominator,
+            label = scheduleRow.denominator,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

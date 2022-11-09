@@ -23,11 +23,11 @@ import me.kofesst.android.mptinformant.presentation.utils.OfflineInterceptor
 import me.kofesst.android.mptinformant.presentation.utils.OnlineInterceptor
 import me.kofesst.android.mptinformant.presentation.utils.buildOfflineInterceptor
 import me.kofesst.android.mptinformant.presentation.utils.buildOnlineInterceptor
-import me.kofesst.android.mptinformer.domain.repositories.ChangesRepository
-import me.kofesst.android.mptinformer.domain.repositories.DepartmentsRepository
-import me.kofesst.android.mptinformer.domain.repositories.PreferencesRepository
-import me.kofesst.android.mptinformer.domain.repositories.ScheduleRepository
-import me.kofesst.android.mptinformer.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.domain.repositories.ChangesRepository
+import me.kofesst.android.mptinformant.domain.repositories.DepartmentsRepository
+import me.kofesst.android.mptinformant.domain.repositories.PreferencesRepository
+import me.kofesst.android.mptinformant.domain.repositories.ScheduleRepository
+import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

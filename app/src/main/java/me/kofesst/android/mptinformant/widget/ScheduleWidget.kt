@@ -33,10 +33,10 @@ import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.*
 import me.kofesst.android.mptinformant.ui.uiText
 import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
 
 class ScheduleWidget : GlanceAppWidget() {
     companion object {
@@ -221,23 +221,6 @@ class ScheduleWidget : GlanceAppWidget() {
         scheduleRow: GroupScheduleRow,
         weekLabel: WeekLabel,
     ) {
-        when (scheduleRow) {
-            is GroupScheduleRow.Single -> SingleScheduleRowContent(modifier, scheduleRow)
-            is GroupScheduleRow.Divided -> DividedScheduleRowContent(
-                settings = settings,
-                scheduleRow = scheduleRow,
-                weekLabel = weekLabel,
-                modifier = modifier
-            )
-            else -> {}
-        }
-    }
-
-    @Composable
-    private fun SingleScheduleRowContent(
-        modifier: GlanceModifier = GlanceModifier,
-        scheduleRow: GroupScheduleRow.Single,
-    ) {
         Row(
             verticalAlignment = Alignment.Vertical.CenterVertically,
             modifier = modifier
@@ -250,15 +233,60 @@ class ScheduleWidget : GlanceAppWidget() {
                 )
             )
             Spacer(modifier = GlanceModifier.width(10.dp))
-            ColoredSurface(
-                color = md_theme_dark_surfaceVariant,
-                modifier = GlanceModifier.fillMaxWidth()
-            ) {
-                ScheduleRowColumn(
-                    subject = scheduleRow.lesson,
-                    teacher = scheduleRow.teacher
+            when (scheduleRow) {
+                is GroupScheduleRow.Single -> SingleScheduleRowContent(
+                    scheduleRow = scheduleRow,
+                    modifier = GlanceModifier.defaultWeight()
                 )
+                is GroupScheduleRow.Divided -> DividedScheduleRowContent(
+                    settings = settings,
+                    scheduleRow = scheduleRow,
+                    weekLabel = weekLabel,
+                    modifier = GlanceModifier.defaultWeight()
+                )
+                else -> {}
             }
+            Spacer(modifier = GlanceModifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
+                with(scheduleRow.timeTable) {
+                    Text(
+                        text = ResourceString.timeFormat.asGlanceString(
+                            startTime.hour.toString().padStart(2, '0'),
+                            startTime.minute.toString().padStart(2, '0'),
+                        ),
+                        style = TextStyle(
+                            color = ColorProvider(md_theme_dark_onSurface),
+                            fontSize = 14.sp
+                        )
+                    )
+                    Text(
+                        text = ResourceString.timeFormat.asGlanceString(
+                            endTime.hour.toString().padStart(2, '0'),
+                            endTime.minute.toString().padStart(2, '0'),
+                        ),
+                        style = TextStyle(
+                            color = ColorProvider(md_theme_dark_onSurface),
+                            fontSize = 14.sp
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun SingleScheduleRowContent(
+        modifier: GlanceModifier = GlanceModifier,
+        scheduleRow: GroupScheduleRow.Single,
+    ) {
+        ColoredSurface(
+            color = md_theme_dark_surfaceVariant,
+            modifier = modifier
+        ) {
+            ScheduleRowColumn(
+                subject = scheduleRow.lesson,
+                teacher = scheduleRow.teacher
+            )
         }
     }
 
@@ -269,36 +297,23 @@ class ScheduleWidget : GlanceAppWidget() {
         scheduleRow: GroupScheduleRow.Divided,
         weekLabel: WeekLabel,
     ) {
-        Row(
-            verticalAlignment = Alignment.Vertical.CenterVertically,
-            modifier = modifier
-        ) {
-            Text(
-                text = ResourceString.lessonNumberFormat.asGlanceString(scheduleRow.lessonNumber),
-                style = TextStyle(
-                    color = ColorProvider(md_theme_dark_onSurface),
-                    fontSize = 16.sp
+        Column(modifier = modifier) {
+            if (!settings.hideLabel || weekLabel == WeekLabel.Numerator) {
+                DividedScheduleRowLabel(
+                    scheduleRow = scheduleRow.numerator,
+                    rowWeekLabel = WeekLabel.Numerator,
+                    modifier = GlanceModifier.fillMaxWidth()
                 )
-            )
-            Spacer(modifier = GlanceModifier.width(10.dp))
-            Column {
-                if (!settings.hideLabel || weekLabel == WeekLabel.Numerator) {
-                    DividedScheduleRowLabel(
-                        scheduleRow = scheduleRow.numerator,
-                        rowWeekLabel = WeekLabel.Numerator,
-                        modifier = GlanceModifier.fillMaxWidth()
-                    )
-                    if (!settings.hideLabel) {
-                        Spacer(modifier = GlanceModifier.height(20.dp))
-                    }
+                if (!settings.hideLabel) {
+                    Spacer(modifier = GlanceModifier.height(20.dp))
                 }
-                if (!settings.hideLabel || weekLabel == WeekLabel.Denominator) {
-                    DividedScheduleRowLabel(
-                        scheduleRow = scheduleRow.denominator,
-                        rowWeekLabel = WeekLabel.Denominator,
-                        modifier = GlanceModifier.fillMaxWidth()
-                    )
-                }
+            }
+            if (!settings.hideLabel || weekLabel == WeekLabel.Denominator) {
+                DividedScheduleRowLabel(
+                    scheduleRow = scheduleRow.denominator,
+                    rowWeekLabel = WeekLabel.Denominator,
+                    modifier = GlanceModifier.fillMaxWidth()
+                )
             }
         }
     }

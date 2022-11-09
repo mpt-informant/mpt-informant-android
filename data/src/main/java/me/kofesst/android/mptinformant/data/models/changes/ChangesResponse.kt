@@ -1,9 +1,9 @@
 package me.kofesst.android.mptinformant.data.models.changes
 
-import me.kofesst.android.mptinformer.domain.models.DayOfWeek
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChangesDay
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChangesRow
+import me.kofesst.android.mptinformant.domain.models.DayOfWeek
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesDay
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesRow
 
 data class ChangesResponse(
     val group_id: String,

@@ -4,10 +4,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import me.kofesst.android.mptinformer.domain.models.Department
-import me.kofesst.android.mptinformer.domain.models.Group
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
-import me.kofesst.android.mptinformer.domain.repositories.PreferencesRepository
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import me.kofesst.android.mptinformant.domain.models.Department
+import me.kofesst.android.mptinformant.domain.models.Group
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
+import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.domain.repositories.PreferencesRepository
 
 class PreferencesRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
@@ -24,6 +29,13 @@ class PreferencesRepositoryImpl(
             booleanPreferencesKey("widget_hide_label")
         private val widgetSettingsShowChangesMessageKey =
             booleanPreferencesKey("widget_show_changes_message")
+
+        private val appSettingsUseWeekLabelThemeKey =
+            booleanPreferencesKey("app_use_week_label_theme")
+        private val appSettingsShowChangesNotificationKey =
+            booleanPreferencesKey("app_show_changes_notification")
+
+        private val lastGroupChangesKey = stringPreferencesKey("last_group_changes")
     }
 
     override suspend fun saveScheduleSettings(department: Department, group: Group) {
@@ -58,4 +70,43 @@ class PreferencesRepositoryImpl(
                 showChangesMessage = preferences[widgetSettingsShowChangesMessageKey] ?: true
             )
         }.firstOrNull() ?: WidgetSettings()
+
+    override suspend fun saveAppSettings(appSettings: AppSettings) {
+        dataStore.edit { preferences ->
+            preferences[appSettingsUseWeekLabelThemeKey] = appSettings.useWeekLabelTheme
+            preferences[appSettingsShowChangesNotificationKey] = appSettings.showChangesNotification
+        }
+    }
+
+    override suspend fun restoreAppSettings(): AppSettings =
+        dataStore.data.map { preferences ->
+            val useWeekLabelTheme = preferences[appSettingsUseWeekLabelThemeKey]
+                ?: return@map null
+            val showChangesNotification = preferences[appSettingsShowChangesNotificationKey]
+                ?: return@map null
+            AppSettings(
+                useWeekLabelTheme = useWeekLabelTheme,
+                showChangesNotification = showChangesNotification
+            )
+        }.firstOrNull() ?: AppSettings()
+
+    override suspend fun saveLastGroupChanges(changes: GroupChanges?) {
+        dataStore.edit { preferences ->
+            if (changes != null) {
+                preferences[lastGroupChangesKey] = Json.encodeToString(changes)
+            } else {
+                preferences.remove(lastGroupChangesKey)
+            }
+        }
+    }
+
+    override suspend fun restoreLastGroupChanges(): GroupChanges? =
+        dataStore.data.map { preferences ->
+            val encodedJson = preferences[lastGroupChangesKey]
+            if (encodedJson != null) {
+                Json.decodeFromString<GroupChanges>(encodedJson)
+            } else {
+                null
+            }
+        }.firstOrNull()
 }

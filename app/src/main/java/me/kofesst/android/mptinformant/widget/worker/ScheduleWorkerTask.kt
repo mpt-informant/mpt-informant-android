@@ -3,6 +3,7 @@ package me.kofesst.android.mptinformant.widget.worker
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -33,14 +34,7 @@ import me.kofesst.android.mptinformant.data.utils.getDayOfWeek
 import me.kofesst.android.mptinformant.presentation.MainActivity
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.widget.ScheduleWidget
-import me.kofesst.android.mptinformer.domain.models.Group
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
-import me.kofesst.android.mptinformer.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
 
 @HiltWorker
 class ScheduleWorkerTask @AssistedInject constructor(
@@ -76,7 +70,6 @@ class ScheduleWorkerTask @AssistedInject constructor(
         private const val CHANGES_CHANNEL_ID = "MPT Informant Changes"
     }
 
-    private var changes: GroupChanges? = null
     private var changesNotificationId: Int = 1
 
     init {
@@ -86,11 +79,13 @@ class ScheduleWorkerTask @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val scheduleSettings = useCases.restoreScheduleSettings()
         val widgetSettings = useCases.restoreWidgetSettings()
+        val appSettings = useCases.restoreAppSettings()
         return try {
             updateWidget(
                 context = context,
                 scheduleSettings = scheduleSettings,
-                widgetSettings = widgetSettings
+                widgetSettings = widgetSettings,
+                appSettings = appSettings
             )
             Result.success()
         } catch (e: Exception) {
@@ -103,19 +98,31 @@ class ScheduleWorkerTask @AssistedInject constructor(
         context: Context,
         scheduleSettings: Pair<String, String>?,
         widgetSettings: WidgetSettings,
+        appSettings: AppSettings,
     ) {
         val groupId = scheduleSettings?.second
             ?: useCases.getDepartments().first().groups.first().id
         val schedule = getSchedule(groupId) ?: return
         val scheduleDay = getScheduleDayToDisplay(schedule, widgetSettings)
-        checkForNewChanges(getChanges(groupId))
+        val lastChanges = useCases.restoreLastGroupChanges()
+        val newChanges = getChanges(groupId)
+        if (appSettings.showChangesNotification) {
+            checkForNewChanges(
+                lastChanges = lastChanges,
+                newChanges = newChanges
+            )
+        }
+        useCases.saveLastGroupChanges(newChanges)
         GlanceAppWidgetManager(context)
             .getGlanceIds(ScheduleWidget::class.java)
             .forEach { glanceId ->
                 updateAppWidgetState(context, glanceId) { preferences ->
                     preferences.updateWidgetState(
                         scheduleDay = scheduleDay,
-                        hasChanges = hasChangesForScheduleDay(scheduleDay),
+                        hasChanges = hasChangesForScheduleDay(
+                            changes = lastChanges,
+                            scheduleDay = scheduleDay
+                        ),
                         weekLabel = schedule.weekLabel,
                         widgetSettings = widgetSettings
                     )
@@ -124,7 +131,10 @@ class ScheduleWorkerTask @AssistedInject constructor(
         ScheduleWidget().updateAll(context)
     }
 
-    private fun hasChangesForScheduleDay(scheduleDay: GroupScheduleDay): Boolean {
+    private fun hasChangesForScheduleDay(
+        changes: GroupChanges?,
+        scheduleDay: GroupScheduleDay,
+    ): Boolean {
         return changes?.days?.firstOrNull { changesDay ->
             changesDay.dayOfWeek == scheduleDay.dayOfWeek
         } != null
@@ -148,11 +158,12 @@ class ScheduleWorkerTask @AssistedInject constructor(
         )
     }
 
-    private fun checkForNewChanges(newChanges: GroupChanges?) {
+    private fun checkForNewChanges(
+        lastChanges: GroupChanges?,
+        newChanges: GroupChanges?,
+    ) {
         val shouldNotify =
-            newChanges != null && newChanges.days.isNotEmpty() && newChanges != changes
-        changes = newChanges
-
+            newChanges != null && newChanges.days.isNotEmpty() && newChanges != lastChanges
         if (!shouldNotify) return
 
         Intent().also { intent ->
@@ -184,12 +195,32 @@ class ScheduleWorkerTask @AssistedInject constructor(
     private fun buildChangesNotification(): Notification {
         val contentTitle = ResourceString.newChangesNotificationTitle.asString(context)
         val contentText = ResourceString.newChangesNotificationDescription.asString(context)
+        val contentIntent = createChangesNotificationIntent()
         return NotificationCompat.Builder(context, CHANGES_CHANNEL_ID)
+            .setAutoCancel(true)
+            .setContentIntent(contentIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+            .build().apply {
+                flags = flags or Notification.FLAG_AUTO_CANCEL
+            }
+    }
+
+    private fun createChangesNotificationIntent(): PendingIntent {
+        val activityIntent = Intent(context, MainActivity::class.java)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+        } else {
+            PendingIntent.FLAG_CANCEL_CURRENT
+        }
+        return PendingIntent.getActivity(
+            context,
+            0,
+            activityIntent,
+            flags
+        )
     }
 
     private fun getScheduleDayToDisplay(

@@ -1,7 +1,7 @@
 package me.kofesst.android.mptinformant.data.models.department
 
-import me.kofesst.android.mptinformer.domain.models.Department
-import me.kofesst.android.mptinformer.domain.models.Group
+import me.kofesst.android.mptinformant.domain.models.Department
+import me.kofesst.android.mptinformant.domain.models.Group
 
 class AllDepartmentsResponse : ArrayList<DepartmentDto>() {
     fun toDepartmentsList(): List<Department> = map { dto ->
