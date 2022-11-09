@@ -74,7 +74,7 @@ class PreferencesRepositoryImpl(
     override suspend fun saveAppSettings(appSettings: AppSettings) {
         dataStore.edit { preferences ->
             preferences[appSettingsUseWeekLabelThemeKey] = appSettings.useWeekLabelTheme
-            preferences[widgetSettingsShowChangesMessageKey] = appSettings.showChangesNotification
+            preferences[appSettingsShowChangesNotificationKey] = appSettings.showChangesNotification
         }
     }
 
