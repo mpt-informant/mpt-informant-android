@@ -1,0 +1,3 @@
+-verbose
+-keep class me.kofesst.android.mptinformant.** { *; }
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation

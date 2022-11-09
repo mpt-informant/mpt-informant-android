@@ -1,0 +1,5 @@
+-verbose
+-keep class me.kofesst.android.mptinformant.** { *; }
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
