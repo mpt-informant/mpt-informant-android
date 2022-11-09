@@ -24,5 +24,6 @@ class UseCases(
     val restoreLastGroupChanges: RestoreLastGroupChanges = RestoreLastGroupChanges(
         preferencesRepository),
     val saveAppSettings: SaveAppSettings = SaveAppSettings(preferencesRepository),
-    val restoreAppSettings: RestoreAppSettings = RestoreAppSettings(preferencesRepository)
+    val restoreAppSettings: RestoreAppSettings = RestoreAppSettings(preferencesRepository),
+    val getWeekLabel: GetWeekLabel = GetWeekLabel(scheduleRepository),
 )

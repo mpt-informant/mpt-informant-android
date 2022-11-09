@@ -8,11 +8,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
+import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
-import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +26,12 @@ class MainViewModel @Inject constructor(
 
     private val _widgetSettingsForm = mutableStateOf(WidgetSettingsForm())
     val widgetSettingsForm: State<WidgetSettingsForm> get() = _widgetSettingsForm
+
+    private val _appSettings = mutableStateOf(AppSettings())
+    val appSettings: State<AppSettings> get() = _appSettings
+
+    private val _weekLabel = mutableStateOf(WeekLabel.None)
+    val weekLabel: State<WeekLabel> get() = _weekLabel
 
     private val _appSettingsForm = mutableStateOf(AppSettingsForm())
     val appSettingsForm: State<AppSettingsForm> get() = _appSettingsForm
@@ -39,7 +47,10 @@ class MainViewModel @Inject constructor(
                 )
             }
 
-            _appSettingsForm.value = with(useCases.restoreAppSettings()) {
+            _appSettings.value = useCases.restoreAppSettings()
+            _weekLabel.value = useCases.getWeekLabel()
+
+            _appSettingsForm.value = with(appSettings.value) {
                 appSettingsForm.value.copy(
                     useWeekLabelTheme = useWeekLabelTheme,
                     showChangesNotification = showChangesNotification
@@ -114,7 +125,11 @@ class MainViewModel @Inject constructor(
     private fun saveSettings() {
         viewModelScope.launch {
             useCases.saveWidgetSettings(widgetSettingsForm.value.toModel())
-            useCases.saveAppSettings(appSettingsForm.value.toModel())
+
+            val appSettings = appSettingsForm.value.toModel()
+            useCases.saveAppSettings(appSettings)
+            _appSettings.value = appSettings
+
             _settingsChannel.send(true)
         }
     }

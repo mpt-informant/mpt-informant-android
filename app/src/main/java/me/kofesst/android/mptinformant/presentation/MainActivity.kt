@@ -74,7 +74,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            val viewModel = hiltViewModel<MainViewModel>(
+                viewModelStoreOwner = this
+            )
+            val appSettings by viewModel.appSettings
+            val weekLabel by viewModel.weekLabel
+            LaunchedEffect(Unit) {
+                viewModel.loadSettings()
+            }
+            AppTheme(
+                useWeekLabelTheme = appSettings.useWeekLabelTheme,
+                weekLabel = weekLabel
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -87,13 +98,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainActivityContent() {
-        val viewModel = hiltViewModel<MainViewModel>(
-            viewModelStoreOwner = this
-        )
-        LaunchedEffect(Unit) {
-            viewModel.loadSettings()
-        }
-
         val appState = rememberAppState()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val sheetState = rememberModalBottomSheetState(
