@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import me.kofesst.android.mptinformer.domain.models.Department
-import me.kofesst.android.mptinformer.domain.models.Group
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformer.domain.models.settings.AppSettings
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
-import me.kofesst.android.mptinformer.domain.repositories.PreferencesRepository
+import me.kofesst.android.mptinformant.domain.models.Department
+import me.kofesst.android.mptinformant.domain.models.Group
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
+import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.domain.repositories.PreferencesRepository
 
 class PreferencesRepositoryImpl(
     private val dataStore: DataStore<Preferences>,

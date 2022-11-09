@@ -8,8 +8,8 @@ import androidx.glance.LocalContext
 import me.kofesst.android.mptinformant.R
 import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheet
 import me.kofesst.android.mptinformant.presentation.views.GroupInfoViewTab
-import me.kofesst.android.mptinformer.domain.models.DayOfWeek
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.DayOfWeek
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -1,6 +1,6 @@
 package me.kofesst.android.mptinformant.data.models.time
 
-import me.kofesst.android.mptinformer.domain.models.time.TimeTablePair
+import me.kofesst.android.mptinformant.domain.models.time.TimeTablePair
 
 data class TimeTableRowDto(
     val lessonNumber: Int,

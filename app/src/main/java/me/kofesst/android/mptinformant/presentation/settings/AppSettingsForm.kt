@@ -1,6 +1,6 @@
 package me.kofesst.android.mptinformant.presentation.settings
 
-import me.kofesst.android.mptinformer.domain.models.settings.AppSettings
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
 
 data class AppSettingsForm(
     val useWeekLabelTheme: Boolean = false,

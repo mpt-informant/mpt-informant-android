@@ -1,6 +1,6 @@
 package me.kofesst.android.mptinformant.presentation.settings
 
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
 
 data class WidgetSettingsForm(
     val nextDayHours: Int? = 17,

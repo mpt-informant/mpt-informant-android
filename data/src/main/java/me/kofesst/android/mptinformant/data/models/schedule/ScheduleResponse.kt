@@ -1,11 +1,11 @@
 package me.kofesst.android.mptinformant.data.models.schedule
 
-import me.kofesst.android.mptinformer.domain.models.DayOfWeek
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
-import me.kofesst.android.mptinformer.domain.models.time.TimeTableRow
+import me.kofesst.android.mptinformant.domain.models.DayOfWeek
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformant.domain.models.time.TimeTableRow
 
 data class ScheduleResponse(
     val week_label: String,

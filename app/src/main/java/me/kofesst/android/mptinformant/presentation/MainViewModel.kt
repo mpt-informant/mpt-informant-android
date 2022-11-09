@@ -12,7 +12,7 @@ import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
-import me.kofesst.android.mptinformer.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import javax.inject.Inject
 
 @HiltViewModel

@@ -1,7 +1,7 @@
 package me.kofesst.android.mptinformant.data.utils
 
-import me.kofesst.android.mptinformer.domain.models.DayOfWeek
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.DayOfWeek
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
 import java.util.*
 
 fun Date.calendar(): Calendar {

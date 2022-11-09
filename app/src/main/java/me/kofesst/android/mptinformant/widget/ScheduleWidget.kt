@@ -32,10 +32,10 @@ import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.*
 import me.kofesst.android.mptinformant.ui.uiText
 import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
-import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
 import java.io.File
 
 class ScheduleWidget : GlanceAppWidget() {

@@ -20,10 +20,10 @@ import me.kofesst.android.mptinformant.presentation.utils.normalize
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.theme.color
 import me.kofesst.android.mptinformant.ui.uiText
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
 
 @Composable
 fun GroupScheduleColumn(

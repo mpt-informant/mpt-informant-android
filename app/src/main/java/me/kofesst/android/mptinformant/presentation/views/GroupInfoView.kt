@@ -23,10 +23,10 @@ import me.kofesst.android.mptinformant.presentation.utils.normalize
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.components.*
 import me.kofesst.android.mptinformant.ui.uiText
-import me.kofesst.android.mptinformer.domain.models.Department
-import me.kofesst.android.mptinformer.domain.models.Group
-import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
+import me.kofesst.android.mptinformant.domain.models.Department
+import me.kofesst.android.mptinformant.domain.models.Group
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
+import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
 
 @Composable
 fun GroupInfoView(
