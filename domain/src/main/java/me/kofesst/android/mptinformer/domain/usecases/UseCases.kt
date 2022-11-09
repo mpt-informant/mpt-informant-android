@@ -23,4 +23,6 @@ class UseCases(
     val saveLastGroupChanges: SaveLastGroupChanges = SaveLastGroupChanges(preferencesRepository),
     val restoreLastGroupChanges: RestoreLastGroupChanges = RestoreLastGroupChanges(
         preferencesRepository),
+    val saveAppSettings: SaveAppSettings = SaveAppSettings(preferencesRepository),
+    val restoreAppSettings: RestoreAppSettings = RestoreAppSettings(preferencesRepository)
 )

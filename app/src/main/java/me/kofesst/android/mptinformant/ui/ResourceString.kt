@@ -55,7 +55,7 @@ class ResourceString private constructor(@StringRes val resId: Int) {
             ResourceString(R.string.widget_changes_settings_description)
         val widgetShowChangesMessageSettings =
             ResourceString(R.string.widget_show_changes_message_settings)
-        val widgetSettingsSaved = ResourceString(R.string.widget_settings_saved)
+        val settingsSaved = ResourceString(R.string.settings_saved)
         val changesNotificationChannelDescription =
             ResourceString(R.string.changes_notification_channel_description)
         val newChangesNotificationTitle = ResourceString(R.string.new_changes_notification_title)
@@ -66,6 +66,14 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val timeFormat = ResourceString(R.string.time_format)
         val appSettings = ResourceString(R.string.app_settings)
         val settings = ResourceString(R.string.settings)
+        val useWeekLabelThemeSettingsDescription =
+            ResourceString(R.string.use_week_label_theme_settings_description)
+        val useWeekLabelThemeSettingsMessage =
+            ResourceString(R.string.use_week_label_theme_settings_message)
+        val showChangesNotificationSettingsDescription =
+            ResourceString(R.string.show_changes_notification_settings_description)
+        val showChangesNotificationSettingsMessage =
+            ResourceString(R.string.show_changes_notification_settings_message)
     }
 
     @Composable

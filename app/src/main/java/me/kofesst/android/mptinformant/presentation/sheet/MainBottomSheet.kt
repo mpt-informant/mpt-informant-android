@@ -12,9 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,9 +25,12 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
+import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.utils.normalize
+import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.uiText
 
 @Composable
@@ -51,6 +56,9 @@ fun AppBottomSheetContent(
     modifier: Modifier = Modifier,
     widgetSettingsForm: WidgetSettingsForm,
     onWidgetSettingsFormAction: (WidgetSettingsFormAction) -> Unit,
+    appSettingsForm: AppSettingsForm,
+    onAppSettingsFormAction: (AppSettingsFormAction) -> Unit,
+    onSubmitClick: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = AppBottomSheet.values().size)
     val (viewTab, setViewTab) = remember {
@@ -66,7 +74,38 @@ fun AppBottomSheetContent(
             pagerState = pagerState,
             widgetSettingsForm = widgetSettingsForm,
             onWidgetSettingsFormAction = onWidgetSettingsFormAction,
-            modifier = Modifier.fillMaxSize()
+            appSettingsForm = appSettingsForm,
+            onAppSettingsFormAction = onAppSettingsFormAction,
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        )
+        SubmitSettingsButton(
+            onClick = onSubmitClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun SubmitSettingsButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    ExtendedFloatingActionButton(
+        onClick = {
+            keyboardController?.hide()
+            onClick()
+        },
+        modifier = modifier
+    ) {
+        Text(
+            text = ResourceString.saveChanges.asString(),
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
@@ -111,6 +150,8 @@ private fun SheetTabsPager(
     pagerState: PagerState,
     widgetSettingsForm: WidgetSettingsForm,
     onWidgetSettingsFormAction: (WidgetSettingsFormAction) -> Unit,
+    appSettingsForm: AppSettingsForm,
+    onAppSettingsFormAction: (AppSettingsFormAction) -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -119,13 +160,17 @@ private fun SheetTabsPager(
     ) { pageIndex ->
         when (AppBottomSheet.values()[pageIndex]) {
             AppBottomSheet.AppSettings -> {
-                Text("AppSettings")
+                AppSettingsColumn(
+                    appSettingsForm = appSettingsForm,
+                    onFormAction = onAppSettingsFormAction,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
             AppBottomSheet.WidgetSettings -> {
                 WidgetSettingsColumn(
                     widgetSettingsForm = widgetSettingsForm,
                     onFormAction = onWidgetSettingsFormAction,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -133,13 +178,13 @@ private fun SheetTabsPager(
 }
 
 @Composable
-fun AppSettingsColumn(
+fun SettingsColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = modifier
+        modifier = modifier.padding(20.dp)
     ) {
         content()
     }
@@ -199,7 +244,7 @@ fun CheckBoxSettingsField(
 fun SettingsColumnHeader(
     title: String,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
-    subtitle: String,
+    subtitle: String? = null,
     subtitleStyle: TextStyle = MaterialTheme.typography.bodyLarge,
 ) {
     Text(
@@ -207,8 +252,10 @@ fun SettingsColumnHeader(
         style = titleStyle,
         fontWeight = FontWeight.Bold
     )
-    Text(
-        text = subtitle,
-        style = subtitleStyle
-    )
+    if (subtitle?.isNotBlank() == true) {
+        Text(
+            text = subtitle,
+            style = subtitleStyle
+        )
+    }
 }

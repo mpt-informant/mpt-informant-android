@@ -176,16 +176,17 @@ class MainActivity : ComponentActivity() {
             viewModelStoreOwner = this
         )
         val widgetSettingsForm by viewModel.widgetSettingsForm
+        val appSettingsForm by viewModel.appSettingsForm
         ModalBottomSheetLayout(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface,
             sheetState = sheetState,
             sheetContent = {
-                WidgetSettingsResultHandler(result = viewModel.widgetSettingsSubmitResult) {
+                WidgetSettingsResultHandler(result = viewModel.settingsSubmitResult) {
                     coroutineScope.launch {
                         sheetState.hide()
                     }
                     appState.showSnackbar(
-                        message = ResourceString.widgetSettingsSaved.asString(context)
+                        message = ResourceString.settingsSaved.asString(context)
                     )
                 }
                 AppBottomSheetHeader(
@@ -200,9 +201,14 @@ class MainActivity : ComponentActivity() {
                     onWidgetSettingsFormAction = {
                         viewModel.onWidgetSettingsFormAction(it)
                     },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp)
+                    appSettingsForm = appSettingsForm,
+                    onAppSettingsFormAction = {
+                        viewModel.onAppSettingsFormAction(it)
+                    },
+                    onSubmitClick = {
+                        viewModel.submitSettings()
+                    },
+                    modifier = Modifier.fillMaxSize()
                 )
             },
             content = content
