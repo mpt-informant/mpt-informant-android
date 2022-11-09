@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.glance.LocalContext
 import me.kofesst.android.mptinformant.R
+import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheet
 import me.kofesst.android.mptinformant.presentation.views.GroupInfoViewTab
 import me.kofesst.android.mptinformer.domain.models.DayOfWeek
 import me.kofesst.android.mptinformer.domain.models.WeekLabel
@@ -63,6 +64,8 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val hasChangesInDay = ResourceString(R.string.has_changes_in_day)
         val saveChanges = ResourceString(R.string.save_changes)
         val timeFormat = ResourceString(R.string.time_format)
+        val appSettings = ResourceString(R.string.app_settings)
+        val settings = ResourceString(R.string.settings)
     }
 
     @Composable
@@ -99,6 +102,11 @@ fun DayOfWeek.uiText(): ResourceString = when (this) {
 fun GroupInfoViewTab.uiText(): ResourceString = when (this) {
     GroupInfoViewTab.Schedule -> ResourceString.schedule
     GroupInfoViewTab.Changes -> ResourceString.changes
+}
+
+fun AppBottomSheet.uiText(): ResourceString = when (this) {
+    AppBottomSheet.AppSettings -> ResourceString.appSettings
+    AppBottomSheet.WidgetSettings -> ResourceString.widgetSettings
 }
 
 @Composable

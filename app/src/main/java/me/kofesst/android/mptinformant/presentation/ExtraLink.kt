@@ -63,9 +63,9 @@ sealed class ExtraLink(
         icon = Icons.Outlined.DeviceHub
     )
 
-    object WidgetSettings : ExtraLink(
+    object Settings : ExtraLink(
         href = "",
-        text = ResourceString.widgetSettings,
+        text = ResourceString.settings,
         icon = Icons.Outlined.Settings
     )
 }

@@ -27,7 +27,7 @@
     <string name="departments_site">Сайты отделений</string>
     <string name="schedule_widget_desc">Расписание последней выбранной группы</string>
     <string name="schedule_widget_updates_soon">Виджет скоро обновится</string>
-    <string name="widget_settings">Настройки виджетов</string>
+    <string name="widget_settings">Виджеты</string>
     <string name="widget_settings_description">Настройки виджетов вступят в силу после обновления виджета (1 раз в 30 минут)</string>
     <string name="widget_time_settings_description">Время, после которого день расписания в виджете будет меняться на следующий</string>
     <string name="hours">Часов</string>
@@ -43,4 +43,6 @@
     <string name="has_changes_in_day">Есть замены</string>
     <string name="save_changes">Сохранить изменения</string>
     <string name="time_format">%s:%s</string>
+    <string name="app_settings">Приложение</string>
+    <string name="settings">Настройки</string>
 </resources>
