@@ -3,7 +3,7 @@ package me.kofesst.android.mptinformant.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
 
 val md_theme_light_primary = Color(0xFF5555A9)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)

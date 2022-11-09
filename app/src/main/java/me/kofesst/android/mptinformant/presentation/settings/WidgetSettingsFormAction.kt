@@ -5,5 +5,4 @@ sealed class WidgetSettingsFormAction {
     data class NextDayMinuteChanged(val minute: Int?) : WidgetSettingsFormAction()
     data class HideLabelChanged(val checked: Boolean) : WidgetSettingsFormAction()
     data class ShowChangesMessageChanged(val checked: Boolean) : WidgetSettingsFormAction()
-    object Submit : WidgetSettingsFormAction()
 }

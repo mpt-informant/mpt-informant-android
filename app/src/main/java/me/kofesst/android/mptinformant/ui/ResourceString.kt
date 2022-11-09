@@ -8,9 +8,10 @@ import androidx.glance.LocalContext
 import java.text.SimpleDateFormat
 import java.util.*
 import me.kofesst.android.mptinformant.R
+import me.kofesst.android.mptinformant.domain.models.DayOfWeek
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheet
 import me.kofesst.android.mptinformant.presentation.views.GroupInfoViewTab
-import me.kofesst.android.mptinformer.domain.models.DayOfWeek
-import me.kofesst.android.mptinformer.domain.models.WeekLabel
 
 class ResourceString private constructor(@StringRes val resId: Int) {
     companion object {
@@ -54,7 +55,7 @@ class ResourceString private constructor(@StringRes val resId: Int) {
             ResourceString(R.string.widget_changes_settings_description)
         val widgetShowChangesMessageSettings =
             ResourceString(R.string.widget_show_changes_message_settings)
-        val widgetSettingsSaved = ResourceString(R.string.widget_settings_saved)
+        val settingsSaved = ResourceString(R.string.settings_saved)
         val changesNotificationChannelDescription =
             ResourceString(R.string.changes_notification_channel_description)
         val newChangesNotificationTitle = ResourceString(R.string.new_changes_notification_title)
@@ -62,6 +63,17 @@ class ResourceString private constructor(@StringRes val resId: Int) {
             ResourceString(R.string.new_changes_notification_description)
         val hasChangesInDay = ResourceString(R.string.has_changes_in_day)
         val saveChanges = ResourceString(R.string.save_changes)
+        val timeFormat = ResourceString(R.string.time_format)
+        val appSettings = ResourceString(R.string.app_settings)
+        val settings = ResourceString(R.string.settings)
+        val useWeekLabelThemeSettingsDescription =
+            ResourceString(R.string.use_week_label_theme_settings_description)
+        val useWeekLabelThemeSettingsMessage =
+            ResourceString(R.string.use_week_label_theme_settings_message)
+        val showChangesNotificationSettingsDescription =
+            ResourceString(R.string.show_changes_notification_settings_description)
+        val showChangesNotificationSettingsMessage =
+            ResourceString(R.string.show_changes_notification_settings_message)
     }
 
     @Composable
@@ -98,6 +110,11 @@ fun DayOfWeek.uiText(): ResourceString = when (this) {
 fun GroupInfoViewTab.uiText(): ResourceString = when (this) {
     GroupInfoViewTab.Schedule -> ResourceString.schedule
     GroupInfoViewTab.Changes -> ResourceString.changes
+}
+
+fun AppBottomSheet.uiText(): ResourceString = when (this) {
+    AppBottomSheet.AppSettings -> ResourceString.appSettings
+    AppBottomSheet.WidgetSettings -> ResourceString.widgetSettings
 }
 
 @Composable

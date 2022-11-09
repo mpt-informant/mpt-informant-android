@@ -9,19 +9,32 @@ import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import me.kofesst.android.mptinformant.domain.models.WeekLabel
+import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
+import me.kofesst.android.mptinformant.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
+import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
-import me.kofesst.android.mptinformer.domain.usecases.UseCases
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val useCases: UseCases,
 ) : ViewModel() {
-    private val _widgetSettingsChannel = Channel<Boolean>()
-    val widgetSettingsSubmitResult = _widgetSettingsChannel.receiveAsFlow()
+    private val _settingsChannel = Channel<Boolean>()
+    val settingsSubmitResult = _settingsChannel.receiveAsFlow()
 
     private val _widgetSettingsForm = mutableStateOf(WidgetSettingsForm())
     val widgetSettingsForm: State<WidgetSettingsForm> get() = _widgetSettingsForm
+
+    private val _appSettings = mutableStateOf(AppSettings())
+    val appSettings: State<AppSettings> get() = _appSettings
+
+    private val _weekLabel = mutableStateOf(WeekLabel.None)
+    val weekLabel: State<WeekLabel> get() = _weekLabel
+
+    private val _appSettingsForm = mutableStateOf(AppSettingsForm())
+    val appSettingsForm: State<AppSettingsForm> get() = _appSettingsForm
 
     fun loadSettings() {
         viewModelScope.launch {
@@ -31,6 +44,16 @@ class MainViewModel @Inject constructor(
                     nextDayMinutes = nextDayMinutes,
                     hideLabel = hideLabel,
                     showChangesMessage = showChangesMessage
+                )
+            }
+
+            _appSettings.value = useCases.restoreAppSettings()
+            _weekLabel.value = useCases.getWeekLabel()
+
+            _appSettingsForm.value = with(appSettings.value) {
+                appSettingsForm.value.copy(
+                    useWeekLabelTheme = useWeekLabelTheme,
+                    showChangesNotification = showChangesNotification
                 )
             }
         }
@@ -58,13 +81,25 @@ class MainViewModel @Inject constructor(
                     showChangesMessage = action.checked
                 )
             }
-            WidgetSettingsFormAction.Submit -> {
-                submitWidgetSettings()
+        }
+    }
+
+    fun onAppSettingsFormAction(action: AppSettingsFormAction) {
+        when (action) {
+            is AppSettingsFormAction.UseWeekLabelThemeChanged -> {
+                _appSettingsForm.value = appSettingsForm.value.copy(
+                    useWeekLabelTheme = action.checked
+                )
+            }
+            is AppSettingsFormAction.ShowChangesNotificationChanged -> {
+                _appSettingsForm.value = appSettingsForm.value.copy(
+                    showChangesNotification = action.checked
+                )
             }
         }
     }
 
-    private fun submitWidgetSettings() {
+    fun submitSettings() {
         val settingsForm = widgetSettingsForm.value
         val hoursErrorMessage = when {
             settingsForm.nextDayHours == null -> "Это обязательное поле"
@@ -83,14 +118,19 @@ class MainViewModel @Inject constructor(
             minutesErrorMessage = minutesErrorMessage
         )
         if (hoursErrorMessage == null && minutesErrorMessage == null) {
-            saveWidgetSettings()
+            saveSettings()
         }
     }
 
-    private fun saveWidgetSettings() {
+    private fun saveSettings() {
         viewModelScope.launch {
             useCases.saveWidgetSettings(widgetSettingsForm.value.toModel())
-            _widgetSettingsChannel.send(true)
+
+            val appSettings = appSettingsForm.value.toModel()
+            useCases.saveAppSettings(appSettings)
+            _appSettings.value = appSettings
+
+            _settingsChannel.send(true)
         }
     }
 }

@@ -27,7 +27,7 @@
     <string name="departments_site">Сайты отделений</string>
     <string name="schedule_widget_desc">Расписание последней выбранной группы</string>
     <string name="schedule_widget_updates_soon">Виджет скоро обновится</string>
-    <string name="widget_settings">Настройки виджетов</string>
+    <string name="widget_settings">Виджеты</string>
     <string name="widget_settings_description">Настройки виджетов вступят в силу после обновления виджета (1 раз в 30 минут)</string>
     <string name="widget_time_settings_description">Время, после которого день расписания в виджете будет меняться на следующий</string>
     <string name="hours">Часов</string>
@@ -36,10 +36,17 @@
     <string name="widget_hide_label_settings">Скрывать пару с другим типом недели</string>
     <string name="widget_changes_settings_description">Если в расписании дня в виджете есть замены, будет отображаться сообщение об этом</string>
     <string name="widget_show_changes_message_settings">Показывать сообщение о заменах</string>
-    <string name="widget_settings_saved">Настройки виджетов сохранены</string>
+    <string name="settings_saved">Настройки сохранены</string>
     <string name="changes_notification_channel_description">Уведомления о новых заменах в расписании в последней выбранной группе</string>
     <string name="new_changes_notification_title">Новые замены</string>
     <string name="new_changes_notification_description">У вашей группы появились новые замены в расписании</string>
     <string name="has_changes_in_day">Есть замены</string>
     <string name="save_changes">Сохранить изменения</string>
+    <string name="time_format">%s:%s</string>
+    <string name="app_settings">Приложение</string>
+    <string name="settings">Настройки</string>
+    <string name="use_week_label_theme_settings_description">В зависимости от текущего типа недели в приложении будут разные цвета элементов</string>
+    <string name="use_week_label_theme_settings_message">Изменять тему в зависимости от типа недели</string>
+    <string name="show_changes_notification_settings_description">Будет ли отправляться уведомлени о том, что в последней выбранной группе появились новые замены</string>
+    <string name="show_changes_notification_settings_message">Показывать уведомления о заменах</string>
 </resources>
