@@ -20,6 +20,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.util.*
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.builtins.SetSerializer
 import kotlinx.serialization.builtins.nullable
@@ -33,16 +34,7 @@ import me.kofesst.android.mptinformant.data.utils.getDayOfWeek
 import me.kofesst.android.mptinformant.presentation.MainActivity
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.widget.ScheduleWidget
-import me.kofesst.android.mptinformant.domain.models.Group
-import me.kofesst.android.mptinformant.domain.models.WeekLabel
-import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
-import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
-import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
 import me.kofesst.android.mptinformant.domain.models.settings.AppSettings
-import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
-import me.kofesst.android.mptinformant.domain.usecases.UseCases
-import java.util.*
 
 @HiltWorker
 class ScheduleWorkerTask @AssistedInject constructor(
@@ -57,8 +49,10 @@ class ScheduleWorkerTask @AssistedInject constructor(
                 polymorphic(GroupScheduleRow::class) {
                     subclass(GroupScheduleRow.Single::class, GroupScheduleRow.Single.serializer())
                     subclass(GroupScheduleRow.Divided::class, GroupScheduleRow.Divided.serializer())
-                    subclass(GroupScheduleRow.Divided.Label::class,
-                        GroupScheduleRow.Divided.Label.serializer())
+                    subclass(
+                        GroupScheduleRow.Divided.Label::class,
+                        GroupScheduleRow.Divided.Label.serializer()
+                    )
                 }
                 polymorphic(Set::class) {
                     subclass(Set::class, SetSerializer(PolymorphicSerializer(Any::class).nullable))

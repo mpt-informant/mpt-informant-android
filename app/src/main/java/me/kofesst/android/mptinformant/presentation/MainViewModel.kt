@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -15,7 +16,6 @@ import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
-import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(

@@ -5,13 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.glance.LocalContext
+import java.text.SimpleDateFormat
+import java.util.*
 import me.kofesst.android.mptinformant.R
 import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheet
 import me.kofesst.android.mptinformant.presentation.views.GroupInfoViewTab
 import me.kofesst.android.mptinformant.domain.models.DayOfWeek
 import me.kofesst.android.mptinformant.domain.models.WeekLabel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ResourceString private constructor(@StringRes val resId: Int) {
     companion object {
