@@ -7,13 +7,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.launch
-import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
-import me.kofesst.android.mptinformant.presentation.utils.loadSuspend
 import me.kofesst.android.mptinformant.domain.models.Department
 import me.kofesst.android.mptinformant.domain.models.Group
 import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
 import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
 import me.kofesst.android.mptinformant.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
+import me.kofesst.android.mptinformant.presentation.utils.loadSuspend
 
 @HiltViewModel
 class GroupInfoViewModel @Inject constructor(
