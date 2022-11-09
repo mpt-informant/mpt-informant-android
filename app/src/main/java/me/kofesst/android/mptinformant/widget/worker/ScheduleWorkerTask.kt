@@ -39,6 +39,7 @@ import me.kofesst.android.mptinformer.domain.models.changes.GroupChanges
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupSchedule
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformer.domain.models.schedule.GroupScheduleRow
+import me.kofesst.android.mptinformer.domain.models.settings.AppSettings
 import me.kofesst.android.mptinformer.domain.models.settings.WidgetSettings
 import me.kofesst.android.mptinformer.domain.usecases.UseCases
 import java.util.*
@@ -84,11 +85,13 @@ class ScheduleWorkerTask @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val scheduleSettings = useCases.restoreScheduleSettings()
         val widgetSettings = useCases.restoreWidgetSettings()
+        val appSettings = useCases.restoreAppSettings()
         return try {
             updateWidget(
                 context = context,
                 scheduleSettings = scheduleSettings,
-                widgetSettings = widgetSettings
+                widgetSettings = widgetSettings,
+                appSettings = appSettings
             )
             Result.success()
         } catch (e: Exception) {
@@ -101,16 +104,21 @@ class ScheduleWorkerTask @AssistedInject constructor(
         context: Context,
         scheduleSettings: Pair<String, String>?,
         widgetSettings: WidgetSettings,
+        appSettings: AppSettings,
     ) {
         val groupId = scheduleSettings?.second
             ?: useCases.getDepartments().first().groups.first().id
         val schedule = getSchedule(groupId) ?: return
         val scheduleDay = getScheduleDayToDisplay(schedule, widgetSettings)
         val lastChanges = useCases.restoreLastGroupChanges()
-        checkForNewChanges(
-            lastChanges = lastChanges,
-            newChanges = getChanges(groupId)
-        )
+        val newChanges = getChanges(groupId)
+        if (appSettings.showChangesNotification) {
+            checkForNewChanges(
+                lastChanges = lastChanges,
+                newChanges = newChanges
+            )
+        }
+        useCases.saveLastGroupChanges(newChanges)
         GlanceAppWidgetManager(context)
             .getGlanceIds(ScheduleWidget::class.java)
             .forEach { glanceId ->
@@ -156,14 +164,12 @@ class ScheduleWorkerTask @AssistedInject constructor(
         )
     }
 
-    private suspend fun checkForNewChanges(
+    private fun checkForNewChanges(
         lastChanges: GroupChanges?,
         newChanges: GroupChanges?,
     ) {
         val shouldNotify =
             newChanges != null && newChanges.days.isNotEmpty() && newChanges != lastChanges
-        useCases.saveLastGroupChanges(newChanges)
-
         if (!shouldNotify) return
 
         Intent().also { intent ->

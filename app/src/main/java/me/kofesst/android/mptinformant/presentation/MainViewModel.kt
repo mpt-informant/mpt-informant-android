@@ -41,7 +41,8 @@ class MainViewModel @Inject constructor(
 
             _appSettingsForm.value = with(useCases.restoreAppSettings()) {
                 appSettingsForm.value.copy(
-                    useWeekLabelTheme = useWeekLabelTheme
+                    useWeekLabelTheme = useWeekLabelTheme,
+                    showChangesNotification = showChangesNotification
                 )
             }
         }
