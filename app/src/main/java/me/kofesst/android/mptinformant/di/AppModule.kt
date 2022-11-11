@@ -14,15 +14,10 @@ import dagger.hilt.components.SingletonComponent
 import java.io.File
 import javax.inject.Singleton
 import me.kofesst.android.mptinformant.BuildConfig
+import me.kofesst.android.mptinformant.data.remote.GitHubApiService
 import me.kofesst.android.mptinformant.data.remote.InformantApiService
-import me.kofesst.android.mptinformant.data.repositories.ChangesRepositoryImpl
-import me.kofesst.android.mptinformant.data.repositories.DepartmentsRepositoryImpl
-import me.kofesst.android.mptinformant.data.repositories.PreferencesRepositoryImpl
-import me.kofesst.android.mptinformant.data.repositories.ScheduleRepositoryImpl
-import me.kofesst.android.mptinformant.domain.repositories.ChangesRepository
-import me.kofesst.android.mptinformant.domain.repositories.DepartmentsRepository
-import me.kofesst.android.mptinformant.domain.repositories.PreferencesRepository
-import me.kofesst.android.mptinformant.domain.repositories.ScheduleRepository
+import me.kofesst.android.mptinformant.data.repositories.*
+import me.kofesst.android.mptinformant.domain.repositories.*
 import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import me.kofesst.android.mptinformant.presentation.utils.OfflineInterceptor
 import me.kofesst.android.mptinformant.presentation.utils.OnlineInterceptor
@@ -84,6 +79,17 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGitHubApiService(apiServiceClient: OkHttpClient): GitHubApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://api.github.com")
+            .client(apiServiceClient)
+            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .build()
+            .create(GitHubApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
             context.preferencesDataStoreFile("app_preferences")
@@ -116,17 +122,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGitHubRepository(apiService: GitHubApiService): GitHubRepository {
+        return GitHubRepositoryImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
     fun provideUseCases(
         departmentsRepository: DepartmentsRepository,
         scheduleRepository: ScheduleRepository,
         changesRepository: ChangesRepository,
         preferencesRepository: PreferencesRepository,
+        gitHubRepository: GitHubRepository,
     ): UseCases {
         return UseCases(
             departmentsRepository = departmentsRepository,
             scheduleRepository = scheduleRepository,
             changesRepository = changesRepository,
-            preferencesRepository = preferencesRepository
+            preferencesRepository = preferencesRepository,
+            gitHubRepository = gitHubRepository
         )
     }
 }

@@ -1,4 +1,4 @@
-package me.kofesst.android.mptinformant.presentation.views
+package me.kofesst.android.mptinformant.presentation.views.schedule
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

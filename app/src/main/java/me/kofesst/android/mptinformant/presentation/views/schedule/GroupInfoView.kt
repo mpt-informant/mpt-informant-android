@@ -1,4 +1,4 @@
-package me.kofesst.android.mptinformant.presentation.views
+package me.kofesst.android.mptinformant.presentation.views.schedule
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

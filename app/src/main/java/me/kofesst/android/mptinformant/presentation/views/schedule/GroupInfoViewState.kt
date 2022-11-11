@@ -1,4 +1,4 @@
-package me.kofesst.android.mptinformant.presentation.views
+package me.kofesst.android.mptinformant.presentation.views.schedule
 
 import me.kofesst.android.mptinformant.domain.models.Department
 import me.kofesst.android.mptinformant.domain.models.Group

@@ -20,6 +20,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.util.*
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.builtins.SetSerializer
 import kotlinx.serialization.builtins.nullable
@@ -42,7 +43,6 @@ import me.kofesst.android.mptinformant.domain.usecases.UseCases
 import me.kofesst.android.mptinformant.presentation.MainActivity
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.widget.ScheduleWidget
-import java.util.*
 
 @HiltWorker
 class ScheduleWorkerTask @AssistedInject constructor(
