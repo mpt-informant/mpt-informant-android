@@ -1,14 +1,12 @@
 package me.kofesst.android.mptinformant.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import me.kofesst.android.mptinformant.BuildConfig
 import me.kofesst.android.mptinformant.domain.models.releases.AppRelease
@@ -43,25 +41,16 @@ fun AppReleaseCard(
                 )
             }
             Divider()
-            OutlinedButton(
+            TextButton(
                 onClick = onRedirectClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                Text(
+                    text = ResourceString.openInBrowser.asString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = ResourceString.openInBrowser.asString(),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.weight(1.0f))
-                    Icon(
-                        imageVector = Icons.Outlined.OpenInNew,
-                        contentDescription = null
-                    )
-                }
+                )
             }
         }
     }
