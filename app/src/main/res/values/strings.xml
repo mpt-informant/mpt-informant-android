@@ -54,4 +54,9 @@
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="release_date_format">dd.MM.yyyy HH:mm</string>
     <string name="releases">Версии</string>
+    <string name="required_field">Это обязательное поле</string>
+    <string name="widget_time_hours_minimum_error">Минимум 17 часов</string>
+    <string name="widget_time_hours_maximum_error">Максимум 23 часа</string>
+    <string name="widget_time_minutes_minimum_error">Минимум 0 минут</string>
+    <string name="widget_time_minutes_maximum_error">Максимум 59 минут</string>
 </resources>

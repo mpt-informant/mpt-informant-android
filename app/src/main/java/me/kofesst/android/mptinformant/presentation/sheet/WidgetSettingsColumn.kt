@@ -27,14 +27,14 @@ fun WidgetSettingsColumn(
         Divider()
         ScheduleWidgetTimeSettings(
             hours = widgetSettingsForm.nextDayHours,
-            hoursErrorMessage = widgetSettingsForm.hoursErrorMessage,
+            hoursErrorMessage = widgetSettingsForm.hoursErrorMessage?.asString(),
             onHoursChange = {
                 onFormAction(
                     WidgetSettingsFormAction.NextDayHourChanged(it)
                 )
             },
             minutes = widgetSettingsForm.nextDayMinutes,
-            minutesErrorMessage = widgetSettingsForm.minutesErrorMessage,
+            minutesErrorMessage = widgetSettingsForm.minutesErrorMessage?.asString(),
             onMinutesChange = {
                 onFormAction(
                     WidgetSettingsFormAction.NextDayMinuteChanged(it)

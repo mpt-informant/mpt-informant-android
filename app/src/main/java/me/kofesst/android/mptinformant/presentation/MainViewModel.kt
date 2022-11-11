@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -16,6 +15,8 @@ import me.kofesst.android.mptinformant.presentation.settings.AppSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.AppSettingsFormAction
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsForm
 import me.kofesst.android.mptinformant.presentation.settings.WidgetSettingsFormAction
+import me.kofesst.android.mptinformant.ui.ResourceString
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -102,15 +103,15 @@ class MainViewModel @Inject constructor(
     fun submitSettings() {
         val settingsForm = widgetSettingsForm.value
         val hoursErrorMessage = when {
-            settingsForm.nextDayHours == null -> "Это обязательное поле"
-            settingsForm.nextDayHours < 17 -> "Минимум 17 часов"
-            settingsForm.nextDayHours > 23 -> "Максимум 23 часа"
+            settingsForm.nextDayHours == null -> ResourceString.requiredField
+            settingsForm.nextDayHours < 17 -> ResourceString.widgetTimeHoursMinimumError
+            settingsForm.nextDayHours > 23 -> ResourceString.widgetTimeHoursMaximumError
             else -> null
         }
         val minutesErrorMessage = when {
-            settingsForm.nextDayMinutes == null -> "Это обязательное поле"
-            settingsForm.nextDayMinutes < 0 -> "Минимум 0 минут"
-            settingsForm.nextDayMinutes > 59 -> "Максимум 59 минут"
+            settingsForm.nextDayMinutes == null -> ResourceString.requiredField
+            settingsForm.nextDayMinutes < 0 -> ResourceString.widgetTimeMinutesMinimumError
+            settingsForm.nextDayMinutes > 59 -> ResourceString.widgetTimeMinutesMaximumError
             else -> null
         }
         _widgetSettingsForm.value = settingsForm.copy(

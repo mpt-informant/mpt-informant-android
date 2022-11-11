@@ -79,6 +79,13 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val openInBrowser = ResourceString(R.string.open_in_browser)
         val releaseDateFormat = ResourceString(R.string.release_date_format)
         val releases = ResourceString(R.string.releases)
+        val requiredField = ResourceString(R.string.required_field)
+        val widgetTimeHoursMinimumError = ResourceString(R.string.widget_time_hours_minimum_error)
+        val widgetTimeHoursMaximumError = ResourceString(R.string.widget_time_hours_maximum_error)
+        val widgetTimeMinutesMinimumError =
+            ResourceString(R.string.widget_time_minutes_minimum_error)
+        val widgetTimeMinutesMaximumError =
+            ResourceString(R.string.widget_time_minutes_maximum_error)
     }
 
     @Composable
