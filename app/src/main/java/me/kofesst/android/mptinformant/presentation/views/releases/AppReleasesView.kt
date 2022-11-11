@@ -1,4 +1,4 @@
-package me.kofesst.android.mptinformant.presentation.views.dev
+package me.kofesst.android.mptinformant.presentation.views.releases
 
 import android.content.Context
 import android.content.Intent
@@ -24,9 +24,9 @@ import me.kofesst.android.mptinformant.ui.components.AppReleaseCard
 import me.kofesst.android.mptinformant.ui.components.SuspendValueHandler
 
 @Composable
-fun AppDevView(
+fun AppReleasesView(
     modifier: Modifier = Modifier,
-    viewModel: AppDevViewModel = hiltViewModel(),
+    viewModel: AppReleasesViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
         viewModel.requestAppReleases()

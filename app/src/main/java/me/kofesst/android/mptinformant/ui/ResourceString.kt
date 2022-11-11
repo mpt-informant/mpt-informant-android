@@ -78,7 +78,7 @@ class ResourceString private constructor(@StringRes val resId: Int) {
         val latestReleaseTag = ResourceString(R.string.latest_release_tag)
         val openInBrowser = ResourceString(R.string.open_in_browser)
         val releaseDateFormat = ResourceString(R.string.release_date_format)
-        val dev = ResourceString(R.string.dev)
+        val releases = ResourceString(R.string.releases)
     }
 
     @Composable

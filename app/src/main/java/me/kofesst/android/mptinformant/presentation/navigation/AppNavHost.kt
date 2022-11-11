@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import me.kofesst.android.mptinformant.presentation.views.dev.AppDevView
+import me.kofesst.android.mptinformant.presentation.views.releases.AppReleasesView
 import me.kofesst.android.mptinformant.presentation.views.schedule.GroupInfoView
 
 @Composable
@@ -22,8 +22,8 @@ fun AppNavHost(
         composable(route = AppView.Schedule.route) {
             GroupInfoView(modifier = Modifier.fillMaxSize())
         }
-        composable(route = AppView.Dev.route) {
-            AppDevView(modifier = Modifier.fillMaxSize())
+        composable(route = AppView.Releases.route) {
+            AppReleasesView(modifier = Modifier.fillMaxSize())
         }
     }
 }

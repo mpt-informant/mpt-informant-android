@@ -53,5 +53,5 @@
     <string name="latest_release_tag">Последняя</string>
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="release_date_format">dd.MM.yyyy HH:mm</string>
-    <string name="dev">О разработке</string>
+    <string name="releases">Версии</string>
 </resources>

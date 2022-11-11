@@ -1,4 +1,4 @@
-package me.kofesst.android.mptinformant.presentation.views.dev
+package me.kofesst.android.mptinformant.presentation.views.releases
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +13,7 @@ import me.kofesst.android.mptinformant.presentation.utils.loadSuspend
 import javax.inject.Inject
 
 @HiltViewModel
-class AppDevViewModel @Inject constructor(
+class AppReleasesViewModel @Inject constructor(
     private val useCases: UseCases,
 ) : ViewModel() {
     private val _releasesState = mutableStateOf<SuspendValue<List<AppRelease>>>(SuspendValue())

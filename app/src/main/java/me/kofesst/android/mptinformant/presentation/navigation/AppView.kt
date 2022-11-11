@@ -12,9 +12,9 @@ enum class AppView(val route: String, val title: ResourceString, val icon: Image
         title = ResourceString.schedule,
         icon = Icons.Outlined.Schedule
     ),
-    Dev(
-        route = "dev",
-        title = ResourceString.dev,
+    Releases(
+        route = "releases",
+        title = ResourceString.releases,
         icon = Icons.Outlined.Devices
     )
 }
