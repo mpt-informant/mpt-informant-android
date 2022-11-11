@@ -8,11 +8,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import java.text.SimpleDateFormat
+import java.util.*
 import me.kofesst.android.mptinformant.BuildConfig
 import me.kofesst.android.mptinformant.domain.models.releases.AppRelease
 import me.kofesst.android.mptinformant.ui.ResourceString
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun AppReleaseCard(
