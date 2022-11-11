@@ -32,13 +32,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import me.kofesst.android.mptinformant.presentation.navigation.AppBottomBar
+import me.kofesst.android.mptinformant.presentation.navigation.AppNavHost
 import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheetContent
 import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheetHeader
-import me.kofesst.android.mptinformant.presentation.views.GroupInfoView
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.components.ExtraLinkButton
 import me.kofesst.android.mptinformant.ui.components.ExtraLinksColumn
@@ -123,7 +125,8 @@ class MainActivity : ComponentActivity() {
                         drawerState = drawerState,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        GroupInfoView(
+                        AppNavHost(
+                            navController = appState.navController,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(it)
@@ -227,6 +230,9 @@ class MainActivity : ComponentActivity() {
         content: @Composable (PaddingValues) -> Unit,
     ) {
         val appState = LocalAppState.current
+        val navController = appState.navController
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
         Scaffold(
             topBar = {
                 TopAppBar {
@@ -234,6 +240,13 @@ class MainActivity : ComponentActivity() {
                         drawerState.open()
                     }
                 }
+            },
+            bottomBar = {
+                AppBottomBar(
+                    currentScreenRoute = currentRoute,
+                    navController = navController,
+                    modifier = Modifier.fillMaxWidth()
+                )
             },
             snackbarHost = {
                 SnackbarHost(hostState = appState.snackbarHostState)

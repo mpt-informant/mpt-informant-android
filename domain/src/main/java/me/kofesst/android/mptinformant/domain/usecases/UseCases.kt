@@ -1,15 +1,13 @@
 package me.kofesst.android.mptinformant.domain.usecases
 
-import me.kofesst.android.mptinformant.domain.repositories.ChangesRepository
-import me.kofesst.android.mptinformant.domain.repositories.DepartmentsRepository
-import me.kofesst.android.mptinformant.domain.repositories.PreferencesRepository
-import me.kofesst.android.mptinformant.domain.repositories.ScheduleRepository
+import me.kofesst.android.mptinformant.domain.repositories.*
 
 class UseCases(
     departmentsRepository: DepartmentsRepository,
     scheduleRepository: ScheduleRepository,
     changesRepository: ChangesRepository,
     preferencesRepository: PreferencesRepository,
+    gitHubRepository: GitHubRepository,
 
     val getDepartments: GetDepartments = GetDepartments(departmentsRepository),
     val getGroupSchedule: GetGroupSchedule = GetGroupSchedule(scheduleRepository),
@@ -26,4 +24,5 @@ class UseCases(
     val saveAppSettings: SaveAppSettings = SaveAppSettings(preferencesRepository),
     val restoreAppSettings: RestoreAppSettings = RestoreAppSettings(preferencesRepository),
     val getWeekLabel: GetWeekLabel = GetWeekLabel(scheduleRepository),
+    val getAppReleases: GetAppReleases = GetAppReleases(gitHubRepository),
 )
