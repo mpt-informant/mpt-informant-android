@@ -5,13 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.glance.LocalContext
-import java.text.SimpleDateFormat
-import java.util.*
 import me.kofesst.android.mptinformant.R
 import me.kofesst.android.mptinformant.domain.models.DayOfWeek
 import me.kofesst.android.mptinformant.domain.models.WeekLabel
 import me.kofesst.android.mptinformant.presentation.sheet.AppBottomSheet
-import me.kofesst.android.mptinformant.presentation.views.GroupInfoViewTab
+import me.kofesst.android.mptinformant.presentation.views.schedule.GroupInfoViewTab
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ResourceString private constructor(@StringRes val resId: Int) {
     companion object {
@@ -74,6 +74,11 @@ class ResourceString private constructor(@StringRes val resId: Int) {
             ResourceString(R.string.show_changes_notification_settings_description)
         val showChangesNotificationSettingsMessage =
             ResourceString(R.string.show_changes_notification_settings_message)
+        val currentReleaseTag = ResourceString(R.string.current_release_tag)
+        val latestReleaseTag = ResourceString(R.string.latest_release_tag)
+        val openInBrowser = ResourceString(R.string.open_in_browser)
+        val releaseDateFormat = ResourceString(R.string.release_date_format)
+        val dev = ResourceString(R.string.dev)
     }
 
     @Composable

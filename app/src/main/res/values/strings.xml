@@ -49,4 +49,9 @@
     <string name="use_week_label_theme_settings_message">Изменять тему в зависимости от типа недели</string>
     <string name="show_changes_notification_settings_description">Будет ли отправляться уведомлени о том, что в последней выбранной группе появились новые замены</string>
     <string name="show_changes_notification_settings_message">Показывать уведомления о заменах</string>
+    <string name="current_release_tag">Текущая</string>
+    <string name="latest_release_tag">Последняя</string>
+    <string name="open_in_browser">Открыть в браузере</string>
+    <string name="release_date_format">dd.MM.yyyy HH:mm</string>
+    <string name="dev">О разработке</string>
 </resources>
