@@ -3,8 +3,10 @@ package me.kofesst.android.mptinformant.presentation.views.dev
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -15,9 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.SvgDecoder
-import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
@@ -52,13 +51,6 @@ fun AppDevView(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 contentPadding = PaddingValues(20.dp)
             ) {
-                item(key = "waka-time") {
-                    AppWakaTimeBadge(
-                        modifier = Modifier
-                            .height(30.dp)
-                            .fillMaxWidth()
-                    )
-                }
                 itemsIndexed(releases) { index, release ->
                     AppReleaseCard(
                         appRelease = release,
@@ -74,21 +66,6 @@ fun AppDevView(
             }
         }
     }
-}
-
-@Composable
-private fun AppWakaTimeBadge(modifier: Modifier = Modifier) {
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .decoderFactory(SvgDecoder.Factory())
-            .data("https://wakatime.com/badge/user/1fb0c696-5526-4ebf-837f-4d5b13f48f0a/project/ffaf3d1b-4dab-481a-8b0f-501dfaa3625b.svg")
-            .build()
-    )
-    Image(
-        painter = painter,
-        contentDescription = null,
-        modifier = modifier
-    )
 }
 
 private fun redirectToRelease(context: Context, url: String) {
