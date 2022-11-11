@@ -11,13 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesDay
+import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesRow
 import me.kofesst.android.mptinformant.presentation.utils.normalize
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.dateUiText
 import me.kofesst.android.mptinformant.ui.uiText
-import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
-import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesDay
-import me.kofesst.android.mptinformant.domain.models.changes.GroupChangesRow
 
 @Composable
 fun GroupChangesColumn(

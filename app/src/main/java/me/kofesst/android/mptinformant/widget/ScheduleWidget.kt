@@ -29,14 +29,14 @@ import androidx.glance.unit.ColorProvider
 import java.io.File
 import kotlinx.serialization.decodeFromString
 import me.kofesst.android.mptinformant.di.App
-import me.kofesst.android.mptinformant.ui.ResourceString
-import me.kofesst.android.mptinformant.ui.theme.*
-import me.kofesst.android.mptinformant.ui.uiText
-import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
 import me.kofesst.android.mptinformant.domain.models.WeekLabel
 import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleDay
 import me.kofesst.android.mptinformant.domain.models.schedule.GroupScheduleRow
 import me.kofesst.android.mptinformant.domain.models.settings.WidgetSettings
+import me.kofesst.android.mptinformant.ui.ResourceString
+import me.kofesst.android.mptinformant.ui.theme.*
+import me.kofesst.android.mptinformant.ui.uiText
+import me.kofesst.android.mptinformant.widget.worker.ScheduleWorkerTask
 
 class ScheduleWidget : GlanceAppWidget() {
     companion object {
