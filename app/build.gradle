@@ -88,7 +88,7 @@ dependencies {
     // Accompanist
     implementation "com.google.accompanist:accompanist-pager:0.14.0" // Pager
     implementation "com.google.accompanist:accompanist-pager-indicators:0.14.0" // Pager Indicators
-    implementation 'com.google.accompanist:accompanist-swiperefresh:0.26.5-rc' // Swipe refresh
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.27.0' // Swipe refresh
 
     // Retrofit
     def retrofit_version = '2.9.0'
