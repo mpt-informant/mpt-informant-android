@@ -1,7 +1,6 @@
 package me.kofesst.android.mptinformant.presentation.views.schedule.tabs
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +45,7 @@ fun GroupScheduleTab(
                 else -> {
                     GroupScheduleColumn(
                         schedule = it,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }

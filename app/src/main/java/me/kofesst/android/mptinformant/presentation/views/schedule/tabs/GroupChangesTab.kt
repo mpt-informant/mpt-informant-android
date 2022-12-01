@@ -1,7 +1,6 @@
 package me.kofesst.android.mptinformant.presentation.views.schedule.tabs
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,8 @@ fun GroupChangesTab(
         modifier = modifier
     ) {
         SuspendValueHandler(
-            value = changes
+            value = changes,
+            modifier = Modifier.fillMaxSize()
         ) {
             when {
                 it.days.isEmpty() -> {
@@ -45,7 +45,7 @@ fun GroupChangesTab(
                 else -> {
                     GroupChangesColumn(
                         changes = it,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
