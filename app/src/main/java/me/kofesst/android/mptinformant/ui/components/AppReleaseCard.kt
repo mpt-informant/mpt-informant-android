@@ -21,7 +21,10 @@ fun AppReleaseCard(
     isLatest: Boolean,
     onRedirectClick: () -> Unit,
 ) {
-    ElevatedCard(modifier = modifier) {
+    ElevatedCard(
+        elevation = CardDefaults.elevatedCardElevation(8.dp),
+        modifier = modifier
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.padding(20.dp)
