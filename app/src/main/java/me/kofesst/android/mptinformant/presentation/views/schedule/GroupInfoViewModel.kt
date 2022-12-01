@@ -4,6 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import me.kofesst.android.mptinformant.domain.models.Department
@@ -11,6 +14,7 @@ import me.kofesst.android.mptinformant.domain.models.Group
 import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
 import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
 import me.kofesst.android.mptinformant.domain.usecases.UseCases
+import me.kofesst.android.mptinformant.presentation.utils.MptAnalytics
 import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
 import me.kofesst.android.mptinformant.presentation.utils.loadSuspend
 import javax.inject.Inject
@@ -89,10 +93,17 @@ class GroupInfoViewModel @Inject constructor(
 
     private fun saveScheduleSettings() {
         viewModelScope.launch {
+            val department = viewState.value.department!!
+            val group = viewState.value.group!!
             useCases.saveScheduleSettings(
-                department = viewState.value.department!!,
-                group = viewState.value.group!!
+                department = department,
+                group = group
             )
+            // Log to firebase selected department and group
+            Firebase.analytics.logEvent(MptAnalytics.Events.SET_GROUP_INFO) {
+                param(MptAnalytics.Params.DEPARTMENT_NAME, department.name)
+                param(MptAnalytics.Params.GROUP_NAME, group.name)
+            }
         }
     }
 
