@@ -1,8 +1,6 @@
 package me.kofesst.android.mptinformant.presentation.views.schedule
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,8 +12,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import me.kofesst.android.mptinformant.di.App
 import me.kofesst.android.mptinformant.domain.models.Department
@@ -24,6 +20,8 @@ import me.kofesst.android.mptinformant.domain.models.changes.GroupChanges
 import me.kofesst.android.mptinformant.domain.models.schedule.GroupSchedule
 import me.kofesst.android.mptinformant.presentation.utils.SuspendValue
 import me.kofesst.android.mptinformant.presentation.utils.normalize
+import me.kofesst.android.mptinformant.presentation.views.schedule.tabs.GroupChangesTab
+import me.kofesst.android.mptinformant.presentation.views.schedule.tabs.GroupScheduleTab
 import me.kofesst.android.mptinformant.ui.ResourceString
 import me.kofesst.android.mptinformant.ui.components.*
 import me.kofesst.android.mptinformant.ui.uiText
@@ -153,93 +151,19 @@ private fun TabsPager(
     ) { pageIndex ->
         when (GroupInfoViewTab.values()[pageIndex]) {
             GroupInfoViewTab.Schedule -> {
-                ScheduleTabContent(
+                GroupScheduleTab(
                     schedule = schedule,
                     onScheduleRefresh = onScheduleRefresh,
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             GroupInfoViewTab.Changes -> {
-                ChangesTabContent(
+                GroupChangesTab(
                     changes = changes,
                     onChangesRefresh = onChangesRefresh,
                     modifier = Modifier.fillMaxSize()
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ScheduleTabContent(
-    modifier: Modifier = Modifier,
-    schedule: SuspendValue<GroupSchedule>,
-    onScheduleRefresh: () -> Unit,
-) {
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(
-            isRefreshing = schedule.state == SuspendValue.State.Loading
-        ),
-        onRefresh = onScheduleRefresh,
-        modifier = modifier
-    ) {
-        SuspendValueHandler(
-            value = schedule,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            when {
-                it.days.isEmpty() -> {
-                    IconMessage(
-                        icon = Icons.Outlined.Mood,
-                        iconTint = MaterialTheme.colorScheme.onBackground,
-                        message = ResourceString.emptySchedule.asString(),
-                        messageStyle = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-                else -> {
-                    GroupScheduleColumn(
-                        schedule = it,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ChangesTabContent(
-    modifier: Modifier = Modifier,
-    changes: SuspendValue<GroupChanges>,
-    onChangesRefresh: () -> Unit,
-) {
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(
-            isRefreshing = changes.state == SuspendValue.State.Loading
-        ),
-        onRefresh = onChangesRefresh,
-        modifier = modifier
-    ) {
-        SuspendValueHandler(
-            value = changes
-        ) {
-            when {
-                it.days.isEmpty() -> {
-                    IconMessage(
-                        icon = Icons.Outlined.Mood,
-                        iconTint = MaterialTheme.colorScheme.onBackground,
-                        message = ResourceString.emptyChanges.asString(),
-                        messageStyle = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-                else -> {
-                    GroupChangesColumn(
-                        changes = it,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
             }
         }
     }

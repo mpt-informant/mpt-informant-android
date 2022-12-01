@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'org.jlleitschuh.gradle.ktlint' version '11.0.0'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -74,6 +75,10 @@ ktlint {
 }
 
 dependencies {
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
     // Widget
     implementation 'androidx.glance:glance-appwidget:1.0.0-alpha05' // Glance widgets
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3" // Data serializer
@@ -88,7 +93,7 @@ dependencies {
     // Accompanist
     implementation "com.google.accompanist:accompanist-pager:0.14.0" // Pager
     implementation "com.google.accompanist:accompanist-pager-indicators:0.14.0" // Pager Indicators
-    implementation 'com.google.accompanist:accompanist-swiperefresh:0.26.5-rc' // Swipe refresh
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.27.0' // Swipe refresh
 
     // Retrofit
     def retrofit_version = '2.9.0'
